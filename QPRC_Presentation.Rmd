@@ -1,0 +1,153 @@
+---
+title: "Multi-State Multivariate Statistical Process Monitoring"
+author: "Dr. Gabriel Odom"
+header-includes: \usepackage[linesnumbered, ruled]{algorithm2e}
+output:
+  ioslides_presentation: null
+beamer_presentation: default
+logo: baylor_logo.png
+subtitle: An Application to the Mines Park Water Treatment Facility
+bibliography: qprc_bib_abbr.bib
+widescreen: yes
+---
+
+
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Overview of Topics
+
+- Introduction
+- Linear Dimension Reduction
+- Multi-State Multivariate Process Monitoring
+- Conclusion
+- Future work
+- References
+
+
+
+<div class="notes">
+  Smile! :) You got this!
+  </div>
+  
+# Introduction
+  
+## Introduction
+  
+  - In multivariate contexts, the number of parameters to estimate increases quadratically with dimension.
+- That is, we must estimate $p + \frac{p}{2}(p + 1) \in \mathbb{O}(p^2)$ parameters if we have $p$ features.
+- Linear dimension reduction (LDR) allows us to simplify complex data structures to more simple data structures via linear combinations of features.
+- LDR is built around eigen-decomposition / principal component analysis (PCA) or the singular value decomposition (SVD).
+
+
+## LDR Benefits
+
+Proper application of LDR can:
+  
+  - increase model parsimony,
+- reduce computational complexity and costs,
+- reduce the effect of the *curse of dimensionality*,
+- reduce storage costs, and
+- reduce feature redundancy.
+
+
+
+
+
+
+# Multi-State Multivariate Process Monitoring
+
+## The Problem Defined
+- Many factories or other closed production systems use real-time online process monitoring.
+- We aim to detect potential problems within the system before they cause damage or cause the process to shut down.
+- The process has many sensors, with a time series for each.
+- These sensor readings are not independent across time, and their values may have daily trends / perturbations (autocorrelated and non-stationary).
+- The sensors themselves are not independent (cross-correlation of the multiple time series).
+- We compute the Squared Prediction Error (SPE) and Hotelling's $T^2$ statistics regularly to check divergence from Normal Operating Conditions (NOC).
+
+## Example Process Graphs: NOC vs. Fault
+```{r, fig.align = 'center'}
+knitr::include_graphics("NOC_20170317.png")
+```
+```{r, fig.align = 'center'}
+knitr::include_graphics("Fault2A_20170317.png")
+```
+
+## Current Approaches
+PCA fails because of the autocorrelated and non-linearity / non-stationarity of the data. These are a few of the methods currently employed:
+
+- Adaptive-Dynamic PCA (AD-PCA) of @kazor_comparison_2016
+- Kernel PCA (kPCA) of @ge_improved_2009
+- Adaptive kPCA (AkPCA) of @chouaib_adaptive_2013
+- Local Linear Embedding (LLE) @miao_nonlinear_2013
+- Multi-dimensional scaling and isometric mapping (IsoMap) of @tenenbaum_global_2000-1
+- Semidefinite Embedding (SDE) / Maximimum Variance Unfolding (MVU) of @weinberger_unsupervised_2006
+
+## MSAD-PCA: Our Contribution
+We choose to work with AD-PCA because it is simple in idea and computation and has non-inferior to superior results to more complicated methods.
+
+- As the process-dimension increases, computation of process statistics increase cubically unde PCA. We must reduce the data dimension.
+- Feature distributions change over time and are serially correlated (Adaptive-Dynamic PCA).
+- Some processes have multiple states: samples include brain waves during different parts of the sleep cycle or chemical concentrations in a tank during different cleaning steps.
+- These states are highly discrete and can cause data matrix instability (near-0 variance).
+- Feature distributions change with different known process states, so we block on them. This is Multi-State ADPCA (MSAD-PCA).
+
+## Synthetic Data Fault Detection Time
+We present the distribution of time in minutes after synthetic fault induction until the first alarm by each linear projection method. We also record the censoring percentatge for each method (OOB%), which states what percentage of the time the specified method failed to detect a fault within 24 hours. Finally, we also include the expected number of false alarms per day by method.
+
+0.05      Mean      0.95      OOB%   False Alarm %   False Alarms / Day
+--------   --------   -------   -------   -------   -------         -------
+MSAD SPE        264       370       621        0%   0.2%            2.88
+MSAD T2         364       493       533        0%   0.0%            0
+AD SPE          Inf       Inf       Inf      100%   0.0%            0
+AD T2            35      1114      1406      2.3%   1.5%            21.6
+
+
+## Real Data
+- This work is motivated by our partnership with the Colorado School of Mines on the ReNUWit water preservation grant.
+- Our team manages a decentralised wastewater treatment plant in Golden, CO.
+- We measure 40 features and their lagged values (80 total features).
+- The continuous features are aggregated to the minute-level.
+- We aim to develop a monitoring process capable of detecting system faults before human operators.
+- We have choices for the blocking variables:
+
++ Blower operation: controls aeration of the mixture.
++ Sequencing Batch Bioreactor Phase: fill, mix, steep, or release.
++ Membrane Bioreactor Mode: mixing, cleaning, etc.
+
+## Package `mvMonitoring`
+- No website: our package is currently in private beta-testing at the facility.    
+- So far, engineers have been pleased with what we've developed so far, and they are working with us closely to polish the package. 
+- `mspProcessData()` generates random draws from a serially autocorrelated and nonstationary multi-state (or single-state) multivariate process.
+- `mspTrain()` trains the projection matrix and fault detection components.
+- `mspMonitor()` assesses incoming process observations and classifies them as normal or abnormal.
+- `mspWarning()` keeps a running tally of abnormal observations and raises an alarm if necessary.
+- Alarms can be sent via email or SMS from the remote facility to the operators or to the central facility.
+
+
+
+
+# Summary and References
+
+## Summary
+
+- We have described three applications of linear dimension reduction.
+- We have presented three accompanying real data sets and discussed their details.
+- We have discussed three code packages.
+
+## Future Work
+- Savvy Feature Filtering: use the SVD "backwards" to select features which have strong influence on a classifier.
+- Optimal Principal Component Selection: rather than choosing features by the largest eigenvalues, choose features by their contribution to between-class variance.
+
+<style>
+  slides > slide { overflow: scroll; }
+slides > slide:not(.nobackground):after {
+  content: '';
+}
+</style>
+  
+  ## References {.smaller}
+  
+  
+  
