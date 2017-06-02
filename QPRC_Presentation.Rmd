@@ -19,10 +19,11 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Overview of Topics
 
 - Introduction
-- Linear Dimension Reduction
-- Multi-State Multivariate Process Monitoring
-- Conclusion
-- Future work
+- Modifying Principal Component Analysis
+- Simulation Design
+- Simulation Results
+- Case Study
+- Conclusion and Future work
 - References
 
 
@@ -32,28 +33,116 @@ knitr::opts_chunk$set(echo = FALSE)
   </div>
   
 # Introduction
+
+## Acknowledgements
   
 ## Introduction
   
-  - In multivariate contexts, the number of parameters to estimate increases quadratically with dimension.
+- In multivariate contexts, the number of parameters to estimate increases quadratically with dimension.
 - That is, we must estimate $p + \frac{p}{2}(p + 1) \in \mathbb{O}(p^2)$ parameters if we have $p$ features.
 - Linear dimension reduction (LDR) allows us to simplify complex data structures to more simple data structures via linear combinations of features.
 - LDR is built around eigen-decomposition / principal component analysis (PCA) or the singular value decomposition (SVD).
 
 
-## LDR Benefits
+## Motivating Example
 
-Proper application of LDR can:
-  
-  - increase model parsimony,
-- reduce computational complexity and costs,
-- reduce the effect of the *curse of dimensionality*,
-- reduce storage costs, and
-- reduce feature redundancy.
+- Decentralized wastewater treatment (WWT) plant in Golden, CO
+- We aim to quickly and accurately detect when a part of the cleaning process malfunctions.
+
+## Competing Methods
+
+## Current Perspectives
+- Earlier work applying PCA to WWT by @wise_principal_1988 and @kresta_multivariate_1991
+- More recent work applying PCA by @baggiani_real-time_2009, @sanchez-fernandez_fault_2015, and @kazor_comparison_2016
 
 
 
+# Modifying PCA
 
+## PCA Basics
+
+## Adaptive-Dynamic PCA
+
+### Adaptive PCA
+
+### Dynamic PCA
+
+## Multi-State AD-PCA
+
+## Monitoring Statistics
+
+### Hotelling's $T^2$
+
+### Squared Prediction Error
+
+### Threshold Estimation
+
+
+
+# Simulation Design
+
+## Notation
+
+## Details of Data Generation
+- We follow @kazor_comparison_2016 and continue updating the original design of @dong_batch_1996
+
+### Errors and Latent Feature Construction
+
+### Feature and State Definitions
+
+## Faults
+
+### Shift Faults
+
+#### Faults Defined
+
+#### Faults Visualized
+
+### Drift Faults
+
+#### Faults Defined
+
+#### Faults Visualized
+
+### Latent and Error Faults
+
+#### Faults Defined
+
+#### Faults Visualized
+
+## Monte Carlo Replication
+
+
+
+# Simulation Study Results
+
+## Simulation Results
+
+## False Alarm Rates
+
+## Detection Times
+
+
+
+# Case Study
+
+## Motivation
+
+## Facility and Process Details
+
+## Data Cleaning
+
+## Method Results
+
+### False Alarm Rates
+
+### Fault Detection Times
+
+
+
+# Conclusion
+
+## Conclusion
 
 
 # Multi-State Multivariate Process Monitoring

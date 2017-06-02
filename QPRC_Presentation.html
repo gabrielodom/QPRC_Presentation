@@ -118,16 +118,19 @@
 
 <ul>
 <li>Introduction</li>
-<li>Linear Dimension Reduction</li>
-<li>Multi-State Multivariate Process Monitoring</li>
-<li>Conclusion</li>
-<li>Future work</li>
+<li>Modifying Principal Component Analysis</li>
+<li>Simulation Design</li>
+<li>Simulation Results</li>
+<li>Case Study</li>
+<li>Conclusion and Future work</li>
 <li>References</li>
 </ul>
 
 <aside class='note'><section>Smile! :) You got this!</section></aside>
 
 </article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Introduction</h2></hgroup><article  id="introduction">
+
+</article></slide><slide class=''><hgroup><h2>Acknowledgements</h2></hgroup><article  id="acknowledgements">
 
 </article></slide><slide class=''><hgroup><h2>Introduction</h2></hgroup><article  id="introduction-1">
 
@@ -138,17 +141,103 @@
 <li>LDR is built around eigen-decomposition / principal component analysis (PCA) or the singular value decomposition (SVD).</li>
 </ul>
 
-</article></slide><slide class=''><hgroup><h2>LDR Benefits</h2></hgroup><article  id="ldr-benefits">
-
-<p>Proper application of LDR can:</p>
+</article></slide><slide class=''><hgroup><h2>Motivating Example</h2></hgroup><article  id="motivating-example">
 
 <ul>
-<li>increase model parsimony,</li>
-<li>reduce computational complexity and costs,</li>
-<li>reduce the effect of the <em>curse of dimensionality</em>,</li>
-<li>reduce storage costs, and</li>
-<li>reduce feature redundancy.</li>
+<li>Decentralized wastewater treatment (WWT) plant in Golden, CO</li>
+<li>We aim to quickly and accurately detect when a part of the cleaning process malfunctions.</li>
 </ul>
+
+</article></slide><slide class=''><hgroup><h2>Competing Methods</h2></hgroup><article  id="competing-methods">
+
+</article></slide><slide class=''><hgroup><h2>Current Perspectives</h2></hgroup><article  id="current-perspectives">
+
+<ul>
+<li>Earlier work applying PCA to WWT by <span class="cite">Wise et al. (1988)</span> and <span class="cite">Kresta, MacGregor, and Marlin (1991)</span></li>
+<li>More recent work applying PCA by <span class="cite">Baggiani and Marsili-Libelli (2009)</span>, <span class="cite">Sanchez-Fernandez, Fuente, and Sainz-Palmero (2015)</span>, and <span class="cite">Kazor et al. (2016)</span></li>
+</ul>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Modifying PCA</h2></hgroup><article  id="modifying-pca">
+
+</article></slide><slide class=''><hgroup><h2>PCA Basics</h2></hgroup><article  id="pca-basics">
+
+</article></slide><slide class=''><hgroup><h2>Adaptive-Dynamic PCA</h2></hgroup><article  id="adaptive-dynamic-pca">
+
+<h3>Adaptive PCA</h3>
+
+<h3>Dynamic PCA</h3>
+
+</article></slide><slide class=''><hgroup><h2>Multi-State AD-PCA</h2></hgroup><article  id="multi-state-ad-pca">
+
+</article></slide><slide class=''><hgroup><h2>Monitoring Statistics</h2></hgroup><article  id="monitoring-statistics">
+
+<h3>Hotelling&#39;s \(T^2\)</h3>
+
+<h3>Squared Prediction Error</h3>
+
+<h3>Threshold Estimation</h3>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Simulation Design</h2></hgroup><article  id="simulation-design">
+
+</article></slide><slide class=''><hgroup><h2>Notation</h2></hgroup><article  id="notation">
+
+</article></slide><slide class=''><hgroup><h2>Details of Data Generation</h2></hgroup><article  id="details-of-data-generation">
+
+<ul>
+<li>We follow <span class="cite">Kazor et al. (2016)</span> and continue updating the original design of <span class="cite">Dong and McAvoy (1996)</span></li>
+</ul>
+
+<h3>Errors and Latent Feature Construction</h3>
+
+<h3>Feature and State Definitions</h3>
+
+</article></slide><slide class=''><hgroup><h2>Faults</h2></hgroup><article  id="faults">
+
+<h3>Shift Faults</h3>
+
+<h4>Faults Defined</h4>
+
+<h4>Faults Visualized</h4>
+
+<h3>Drift Faults</h3>
+
+<h4>Faults Defined</h4>
+
+<h4>Faults Visualized</h4>
+
+<h3>Latent and Error Faults</h3>
+
+<h4>Faults Defined</h4>
+
+<h4>Faults Visualized</h4>
+
+</article></slide><slide class=''><hgroup><h2>Monte Carlo Replication</h2></hgroup><article  id="monte-carlo-replication">
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Simulation Study Results</h2></hgroup><article  id="simulation-study-results">
+
+</article></slide><slide class=''><hgroup><h2>Simulation Results</h2></hgroup><article  id="simulation-results">
+
+</article></slide><slide class=''><hgroup><h2>False Alarm Rates</h2></hgroup><article  id="false-alarm-rates">
+
+</article></slide><slide class=''><hgroup><h2>Detection Times</h2></hgroup><article  id="detection-times">
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Case Study</h2></hgroup><article  id="case-study">
+
+</article></slide><slide class=''><hgroup><h2>Motivation</h2></hgroup><article  id="motivation">
+
+</article></slide><slide class=''><hgroup><h2>Facility and Process Details</h2></hgroup><article  id="facility-and-process-details">
+
+</article></slide><slide class=''><hgroup><h2>Data Cleaning</h2></hgroup><article  id="data-cleaning">
+
+</article></slide><slide class=''><hgroup><h2>Method Results</h2></hgroup><article  id="method-results">
+
+<h3>False Alarm Rates</h3>
+
+<h3>Fault Detection Times</h3>
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Conclusion</h2></hgroup><article  id="conclusion">
+
+</article></slide><slide class=''><hgroup><h2>Conclusion</h2></hgroup><article  id="conclusion-1">
 
 </article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Multi-State Multivariate Process Monitoring</h2></hgroup><article  id="multi-state-multivariate-process-monitoring">
 
@@ -298,8 +387,14 @@ slides > slide:not(.nobackground):after {
 <p>## References {.smaller}</p>
 
 <div id="refs" class="references">
+<div id="ref-baggiani_real-time_2009">
+<p>Baggiani, F., and S. Marsili-Libelli. 2009. “Real-Time Fault Detection and Isolation in Biological Wastewater Treatment Plants.” <em>Water Sci. Technol.</em> 60 (11): 2949–61. doi:<a href='https://doi.org/10.2166/wst.2009.723' title=''>10.2166/wst.2009.723</a>.</p></div>
+
 <div id="ref-chouaib_adaptive_2013">
 <p>Chouaib, C., H. Mohamed-Faouzi, and D. Messaoud. 2013. “Adaptive Kernel Principal Component Analysis for Nonlinear Dynamic Process Monitoring.” In <em>Control Conference (ASCC), 2013 9th Asian</em>, 1–6. doi:<a href='https://doi.org/10.1109/ASCC.2013.6606291' title=''>10.1109/ASCC.2013.6606291</a>.</p></div>
+
+<div id="ref-dong_batch_1996">
+<p>Dong, Dong, and Thomas J. McAvoy. 1996. “Batch Tracking via Nonlinear Principal Component Analysis.” <em>AIChE J.</em> 42 (8): 2199–2208. doi:<a href='https://doi.org/10.1002/aic.690420810' title=''>10.1002/aic.690420810</a>.</p></div>
 
 <div id="ref-ge_improved_2009">
 <p>Ge, Zhiqiang, Chunjie Yang, and Zhihuan Song. 2009. “Improved Kernel PCA-Based Monitoring Approach for Nonlinear Processes.” <em>Chem. Eng. Sci.</em> 64 (9): 2245–55. doi:<a href='https://doi.org/10.1016/j.ces.2009.01.050' title=''>10.1016/j.ces.2009.01.050</a>.</p></div>
@@ -307,11 +402,20 @@ slides > slide:not(.nobackground):after {
 <div id="ref-kazor_comparison_2016">
 <p>Kazor, Karen, Ryan W. Holloway, Tzahi Y. Cath, and Amanda S. Hering. 2016. “Comparison of Linear and Nonlinear Dimension Reduction Techniques for Automated Process Monitoring of a Decentralized Wastewater Treatment Facility.” <em>Stoch. Environ. Res. Risk Assess.</em> 30 (5): 1527–44. doi:<a href='https://doi.org/10.1007/s00477-016-1246-2' title=''>10.1007/s00477-016-1246-2</a>.</p></div>
 
+<div id="ref-kresta_multivariate_1991">
+<p>Kresta, James V., John F. MacGregor, and Thomas E. Marlin. 1991. “Multivariate Statistical Monitoring of Process Operating Performance.” <em>Can. J. Chem. Eng.</em> 69 (1): 35–47. doi:<a href='https://doi.org/10.1002/cjce.5450690105' title=''>10.1002/cjce.5450690105</a>.</p></div>
+
 <div id="ref-miao_nonlinear_2013">
 <p>Miao, Aimin, Zhihuan Song, Zhiqiang Ge, Le Zhou, and Qiaojun Wen. 2013. “Nonlinear Fault Detection Based on Locally Linear Embedding.” <em>J. Control Theory Appl.</em> 11 (4): 615–22. doi:<a href='https://doi.org/10.1007/s11768-013-2102-2' title=''>10.1007/s11768-013-2102-2</a>.</p></div>
 
+<div id="ref-sanchez-fernandez_fault_2015">
+<p>Sanchez-Fernandez, A., M. J. Fuente, and G. I. Sainz-Palmero. 2015. “Fault Detection in Wastewater Treatment Plants Using Distributed PCA Methods.” In <em>2015 IEEE 20th Conference on Emerging Technologies Factory Automation (ETFA)</em>, 1–7. doi:<a href='https://doi.org/10.1109/ETFA.2015.7301504' title=''>10.1109/ETFA.2015.7301504</a>.</p></div>
+
 <div id="ref-weinberger_unsupervised_2006">
-<p>Weinberger, Kilian Q., and Lawrence K. Saul. 2006. “Unsupervised Learning of Image Manifolds by Semidefinite Programming.” <em>Int. J. Comput. Vision</em> 70 (1): 77–90. doi:<a href='https://doi.org/10.1007/s11263-005-4939-z' title=''>10.1007/s11263-005-4939-z</a>.</p></div></div></article></slide>
+<p>Weinberger, Kilian Q., and Lawrence K. Saul. 2006. “Unsupervised Learning of Image Manifolds by Semidefinite Programming.” <em>Int. J. Comput. Vision</em> 70 (1): 77–90. doi:<a href='https://doi.org/10.1007/s11263-005-4939-z' title=''>10.1007/s11263-005-4939-z</a>.</p></div>
+
+<div id="ref-wise_principal_1988">
+<p>Wise, B. M., D. J. Veltkamp, B. Davis, N. L. Ricker, and B. R. Kowalski. 1988. “Principal Components Analysis for Monitoring the West Valley Liquid-Fed Ceramic Melter.” In <em>Management of Radioactive Wastes, and Non-Radioactive Wastes from Nuclear Facilities</em>. Vol. 20. Tucson, AZ.</p></div></div></article></slide>
 
 
   <slide class="backdrop"></slide>
