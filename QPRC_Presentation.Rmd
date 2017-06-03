@@ -101,8 +101,6 @@ PCA fails because of the autocorrelated and non-linearity / non-stationarity of 
 - $\textbf{Y}_s := \textbf{X}_s\textbf{P}_d \in\mathbb{R}_{1\times d}$ is the reduced-dimension representation of observation $\textbf{X}_s$.
 
 ## Adaptive PCA
-For an excellent summary of Adaptive and Dynamic PCA, see @ge_multivariate_2012.
-
 - Assume $\mathcal{P}$ is locally linear within a window $w$.
 - Create a $w$-width rolling training window preceding index $s$ by defining
 \[
@@ -111,6 +109,8 @@ For an excellent summary of Adaptive and Dynamic PCA, see @ge_multivariate_2012.
 - Calculate the scatter matrix with $\textbf{X}_{w}$ instead of the full data matrix $\textbf{X}$.
 - Estimate $\textbf{P}_d$.
 - After performing necessary monitoring statistics on the new observations, ''learn'' the newest $n_u$ observations, ''forget'' the oldest $n_u$ observations, and estimate the new scatter matrix.
+
+For an excellent summary of Adaptive and Dynamic PCA, see @ge_multivariate_2012.
 
 ## Dynamic PCA
 - Because the features are correlated over time, we include up to $\ell$ lags per feature.
@@ -128,15 +128,32 @@ $$
 - Calculate the scatter matrix with $\text{L}(\textbf{X})$ instead of the data matrix $\textbf{X}$.
 - Estimate the $p(\ell + 1) \times d$ projection matrix $\textbf{P}_d$.
 
-## Multi-State AD-PCA
+## Multi-State PCA
+- Let $\mathcal{S}_k,\ k = 1, \ldots, K$ be a set of disjoint process states.
+- For the index $s$, the observation $\textbf{X}_{s}$ is said to belong in state $\mathcal{S}_k$ if and only if
+\[
+\textbf{X}_{s} \sim f_k\left( \boldsymbol\mu_k, \boldsymbol\Sigma_k \right).
+\]
+- $f_k$ is some distribution with location parameter $\boldsymbol\mu_k \in \mathbb{R}_{p\times 1}$ and $\boldsymbol\Sigma_k \in \mathbb{R}^{\ge}_{p\times p}$
+- Because the distribution changes from state to state, the principal components are also a function of the state.
+- Partition $\textbf{X}$ as $\left\{\textbf{X}^{(1)}, \textbf{X}^{(2)}, \ldots, \textbf{X}^{(K)}\right\}$, where $\textbf{X}^{(k)}$ is the ordered set of observations under state $\mathcal{S}_k$.
+-  Estimate $K$ distinct projection matrices $\left\{\textbf{P}_d^{(1)}, \textbf{P}_d^{(2)}, \ldots, \textbf{P}_d^{(K)}\right\}$ from the partitioned $\textbf{X}$.
+
+## MSAD-PCA
+
+
+
+# Monitoring Statistics
 
 ## Monitoring Statistics
 
 ### Hotelling's $T^2$
+- Let $\boldsymbol\Lambda_d := \text{diag}\left( \lambda_1, \lambda_2, \ldots, \lambda_d \right)$ be the largest $d$ eigenvalues associated with the first $d$ eigenvectors in $\mathbb{P}_d$.
+- The Hotelling's $T^2$ statistic is $T^2_{s + 1} = \textbf{Y}_{s + 1}\boldsymbol\Lambda_d^{-1} \textbf{Y}_{s + 1}^T$.
 
 ### Squared Prediction Error
 
-### Threshold Estimation
+## Threshold Estimation
 
 
 

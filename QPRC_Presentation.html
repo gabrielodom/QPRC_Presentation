@@ -210,8 +210,6 @@
 
 </article></slide><slide class=''><hgroup><h2>Adaptive PCA</h2></hgroup><article  id="adaptive-pca">
 
-<p>For an excellent summary of Adaptive and Dynamic PCA, see <span class="cite">Ge and Song (2012)</span>.</p>
-
 <ul>
 <li>Assume \(\mathcal{P}\) is locally linear within a window \(w\).</li>
 <li>Create a \(w\)-width rolling training window preceding index \(s\) by defining \[
@@ -221,6 +219,8 @@
 <li>Estimate \(\textbf{P}_d\).</li>
 <li>After performing necessary monitoring statistics on the new observations, &#39;&#39;learn&#39;&#39; the newest \(n_u\) observations, &#39;&#39;forget&#39;&#39; the oldest \(n_u\) observations, and estimate the new scatter matrix.</li>
 </ul>
+
+<p>For an excellent summary of Adaptive and Dynamic PCA, see <span class="cite">Ge and Song (2012)</span>.</p>
 
 </article></slide><slide class=''><hgroup><h2>Dynamic PCA</h2></hgroup><article  id="dynamic-pca">
 
@@ -239,15 +239,35 @@
 <li>Estimate the \(p(\ell + 1) \times d\) projection matrix \(\textbf{P}_d\).</li>
 </ul>
 
-</article></slide><slide class=''><hgroup><h2>Multi-State AD-PCA</h2></hgroup><article  id="multi-state-ad-pca">
+</article></slide><slide class=''><hgroup><h2>Multi-State PCA</h2></hgroup><article  id="multi-state-pca">
 
-</article></slide><slide class=''><hgroup><h2>Monitoring Statistics</h2></hgroup><article  id="monitoring-statistics">
+<ul>
+<li>Let \(\mathcal{S}_k,\ k = 1, \ldots, K\) be a set of disjoint process states.</li>
+<li>For the index \(s\), the observation \(\textbf{X}_{s}\) is said to belong in state \(\mathcal{S}_k\) if and only if \[
+\textbf{X}_{s} \sim f_k\left( \boldsymbol\mu_k, \boldsymbol\Sigma_k \right).
+\]</li>
+<li>\(f_k\) is some distribution with location parameter \(\boldsymbol\mu_k \in \mathbb{R}_{p\times 1}\) and \(\boldsymbol\Sigma_k \in \mathbb{R}^{\ge}_{p\times p}\)</li>
+<li>Because the distribution changes from state to state, the principal components are also a function of the state.</li>
+<li>Partition \(\textbf{X}\) as \(\left\{\textbf{X}^{(1)}, \textbf{X}^{(2)}, \ldots, \textbf{X}^{(K)}\right\}\), where \(\textbf{X}^{(k)}\) is the ordered set of observations under state \(\mathcal{S}_k\).</li>
+<li>Estimate \(K\) distinct projection matrices \(\left\{\textbf{P}_d^{(1)}, \textbf{P}_d^{(2)}, \ldots, \textbf{P}_d^{(K)}\right\}\) from the partitioned \(\textbf{X}\).</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>MSAD-PCA</h2></hgroup><article  id="msad-pca">
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Monitoring Statistics</h2></hgroup><article  id="monitoring-statistics">
+
+</article></slide><slide class=''><hgroup><h2>Monitoring Statistics</h2></hgroup><article  id="monitoring-statistics-1">
 
 <h3>Hotelling&#39;s \(T^2\)</h3>
 
+<ul>
+<li>Let \(\boldsymbol\Lambda_d := \text{diag}\left( \lambda_1, \lambda_2, \ldots, \lambda_d \right)\) be the largest \(d\) eigenvalues associated with the first \(d\) eigenvectors in \(\mathbb{P}_d\).</li>
+<li>The Hotelling&#39;s \(T^2\) statistic is \(T^2_{s + 1} = \textbf{Y}_{s + 1}\boldsymbol\Lambda_d^{-1} \textbf{Y}_{s + 1}^T\).</li>
+</ul>
+
 <h3>Squared Prediction Error</h3>
 
-<h3>Threshold Estimation</h3>
+</article></slide><slide class=''><hgroup><h2>Threshold Estimation</h2></hgroup><article  id="threshold-estimation">
 
 </article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Simulation Design</h2></hgroup><article  id="simulation-design">
 
