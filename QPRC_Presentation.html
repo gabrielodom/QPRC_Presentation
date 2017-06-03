@@ -119,12 +119,17 @@
 <ul>
 <li>Introduction</li>
 <li>Modifying Principal Component Analysis</li>
-<li>Simulation Design</li>
+<li>Simulation of NOC Observations</li>
+<li>Fault Induction</li>
 <li>Simulation Results</li>
 <li>Case Study</li>
 <li>Conclusion and Future work</li>
 <li>References</li>
 </ul>
+
+<!---
+This is the html tag for a comment.
+-->
 
 <aside class='note'><section>Smile! :) You got this!</section></aside>
 
@@ -172,7 +177,7 @@
 
 </article></slide><slide class=''><hgroup><h2>Competing Methods</h2></hgroup><article  id="competing-methods">
 
-<p>PCA fails because of the autocorrelated and non-linearity / non-stationarity of the data. These are a few of the methods currently employed:</p>
+<p>PCA fails because of the autocorrelation and non-linearity / non-stationarity of the data. These are a few of the methods currently employed:</p>
 
 <ul>
 <li>Adaptive-Dynamic PCA (AD-PCA) of <span class="cite">Kazor et al. (2016)</span></li>
@@ -193,7 +198,7 @@
 <li>\(\textbf{X}_s := \left(X_1(s), X_2(s), \ldots, X_p(s)\right) \in\mathbb{R}_{1 \times p}\) is a whitened realization from \(\mathcal{P}\).</li>
 <li>\(\textbf{X} := [\textbf{X}_1\ \vdots\ \textbf{X}_2\ \vdots\ \cdots\ \vdots\ \textbf{X}_n]^T \in \mathbb{R}_{n\times p}\) is the data matrix.</li>
 <li>\(\textbf{X}^T\textbf{X}\in\mathbb{R}_{p \times p}^{\ge}\) is the scatter matrix of \(\textbf{X}\).</li>
-<li>\(\mathbb{R}_{p \times p}^{\ge}\) is \(p\)-dimensional the cone of real, non-negative definite matrices.</li>
+<li>\(\mathbb{R}_{p \times p}^{\ge}\) is the \(p\)-dimensional cone of real, non-negative definite matrices.</li>
 </ul>
 
 </article></slide><slide class=''><hgroup><h2>PCA Basics</h2></hgroup><article  id="pca-basics">
@@ -202,7 +207,7 @@
 <li>\(\textbf{X}^T\textbf{X} := \underset{p \times p}{\textbf{P}} \times \underset{p \times p}{\boldsymbol\Lambda} \times \underset{p \times p}{\textbf{P}}^T\) is the eigendecomposition of the scatter matrix.</li>
 <li>\(\textbf{P}^T\) is the \(p \times p\) orthogonal matrix of eigenvectors.</li>
 <li>\(\boldsymbol\Lambda\) is the diagonal matrix of the \(p\) eigenvalues.</li>
-<li>\(\textbf{P}_d\) is the \(p\times d\) projection matrix preserving the total data variation corresponding to \[
+<li>\(\textbf{P}_d\) is the \(p\times d\) projection matrix preserving the total data variation (energy) corresponding to \[
 \left[\sum\limits_{i = 1}^d \lambda_i\right] / \text{tr}\left(\boldsymbol\Lambda\right).
 \]</li>
 <li>\(\textbf{Y}_s := \textbf{X}_s\textbf{P}_d \in\mathbb{R}_{1\times d}\) is the reduced-dimension representation of observation \(\textbf{X}_s\).</li>
@@ -211,7 +216,7 @@
 </article></slide><slide class=''><hgroup><h2>Adaptive PCA</h2></hgroup><article  id="adaptive-pca">
 
 <ul>
-<li>Assume \(\mathcal{P}\) is locally linear within a window \(w\).</li>
+<li>Assume \(\mathcal{P}\) is locally linear within a window \(w + n_u\).</li>
 <li>Create a \(w\)-width rolling training window preceding index \(s\) by defining \[
 \textbf{X}_{w} := [\textbf{X}_{s - w + 1}\ \vdots\ \textbf{X}_{s - w + 2}\ \vdots\ \cdots\ \vdots\ \textbf{X}_{s - 1}\ \vdots\ \textbf{X}_s]^T.
 \]</li>
@@ -226,7 +231,7 @@
 
 <ul>
 <li>Because the features are correlated over time, we include up to \(\ell\) lags per feature.</li>
-<li>The observation at index \(s\) is now \[
+<li>The observation vector at index \(s\) is now \[
 \begin{align}
 \text{L}(\textbf{X}_s) := &amp;[X_1(s), X_1\left( s - 1 \right), \ldots, X_1\left( s - \ell \right),\ X_2(s), X_2\left( s - 1 \right), \ldots, X_2\left( s - \ell \right), \\
 &amp;\qquad \cdots,\ X_p(s),  X_p\left( s - 1 \right), \ldots, X_p\left( s - \ell \right)].
@@ -252,24 +257,32 @@
 <li>Estimate \(K\) distinct projection matrices \(\left\{\textbf{P}_d^{(1)}, \textbf{P}_d^{(2)}, \ldots, \textbf{P}_d^{(K)}\right\}\) from the partitioned \(\textbf{X}\).</li>
 </ul>
 
-</article></slide><slide class=''><hgroup><h2>MSAD-PCA</h2></hgroup><article  id="msad-pca">
+<!---
+## MSAD-PCA
+- Add the chosen lagged features (Dynamic).
+- Partition the data matrix by states (Multi-State).
+- Consider observations within a rolling window (Adaptive).
+-->
 
-</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Monitoring Statistics</h2></hgroup><article  id="monitoring-statistics">
+</article></slide><slide class=''><hgroup><h2>Monitoring Statistics</h2></hgroup><article  id="monitoring-statistics">
 
-</article></slide><slide class=''><hgroup><h2>Monitoring Statistics</h2></hgroup><article  id="monitoring-statistics-1">
+<p>These statistics are estimated non-parametrically, as discussed by <span class="cite">Kazor et al. (2016)</span></p>
 
 <h3>Hotelling&#39;s \(T^2\)</h3>
 
 <ul>
-<li>Let \(\boldsymbol\Lambda_d := \text{diag}\left( \lambda_1, \lambda_2, \ldots, \lambda_d \right)\) be the largest \(d\) eigenvalues associated with the first \(d\) eigenvectors in \(\mathbb{P}_d\).</li>
-<li>The Hotelling&#39;s \(T^2\) statistic is \(T^2_{s + 1} = \textbf{Y}_{s + 1}\boldsymbol\Lambda_d^{-1} \textbf{Y}_{s + 1}^T\).</li>
+<li>The \(T^2\) statistic is the Mahalanobis distance of the mapped value \(\textbf{Y}_{s + 1}\) from the original space into the PCA-subspace.</li>
+<li>The \(T^2\) statistic is \(T^2_{s + 1} = \textbf{Y}_{s + 1}\boldsymbol\Lambda_d^{-1} \textbf{Y}_{s + 1}^T\), for \(\boldsymbol\Lambda_d := \text{diag}\left( \lambda_1, \lambda_2, \ldots, \lambda_d \right)\).</li>
 </ul>
 
 <h3>Squared Prediction Error</h3>
 
-</article></slide><slide class=''><hgroup><h2>Threshold Estimation</h2></hgroup><article  id="threshold-estimation">
+<ul>
+<li>The <em>SPE</em> statistic measures the goodness-of-fit of the \(d\)-dimensional model to the \(p\)-dimensional process observations, or how well \(\textbf{P}_d\) approximates \(\textbf{P}\).</li>
+<li>The <em>SPE</em> statistic is \(\text{SPE}(\textbf{Y}_{s + 1}) = \left( \textbf{X}_{s + 1} - \textbf{Y}_{s + 1}\textbf{P}^T_d \right) \left( \textbf{X}_{s + 1} - \textbf{Y}_{s + 1}\textbf{P}^T_d \right)^T.\)</li>
+</ul>
 
-</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Simulation Design</h2></hgroup><article  id="simulation-design">
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Simulation of NOC Observations</h2></hgroup><article  id="simulation-of-noc-observations">
 
 </article></slide><slide class=''><hgroup><h2>Notation</h2></hgroup><article  id="notation">
 
@@ -279,31 +292,25 @@
 <li>We follow <span class="cite">Kazor et al. (2016)</span> and continue updating the original design of <span class="cite">Dong and McAvoy (1996)</span></li>
 </ul>
 
-<h3>Errors and Latent Feature Construction</h3>
+</article></slide><slide class=''><hgroup><h2>Errors and Latent Feature Construction</h2></hgroup><article  id="errors-and-latent-feature-construction">
 
-<h3>Feature and State Definitions</h3>
-
-</article></slide><slide class=''><hgroup><h2>Faults</h2></hgroup><article  id="faults">
-
-<h3>Shift Faults</h3>
-
-<h4>Faults Defined</h4>
-
-<h4>Faults Visualized</h4>
-
-<h3>Drift Faults</h3>
-
-<h4>Faults Defined</h4>
-
-<h4>Faults Visualized</h4>
-
-<h3>Latent and Error Faults</h3>
-
-<h4>Faults Defined</h4>
-
-<h4>Faults Visualized</h4>
+</article></slide><slide class=''><hgroup><h2>Feature and State Definitions</h2></hgroup><article  id="feature-and-state-definitions">
 
 </article></slide><slide class=''><hgroup><h2>Monte Carlo Replication</h2></hgroup><article  id="monte-carlo-replication">
+
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Fault Induction</h2></hgroup><article  id="fault-induction">
+
+</article></slide><slide class=''><hgroup><h2>Shift Faults Defined</h2></hgroup><article  id="shift-faults-defined">
+
+</article></slide><slide class=''><hgroup><h2>Shift Faults Visualized</h2></hgroup><article  id="shift-faults-visualized">
+
+</article></slide><slide class=''><hgroup><h2>Drift Faults Defined</h2></hgroup><article  id="drift-faults-defined">
+
+</article></slide><slide class=''><hgroup><h2>Drift Faults Visualized</h2></hgroup><article  id="drift-faults-visualized">
+
+</article></slide><slide class=''><hgroup><h2>Latent and Error Faults Defined</h2></hgroup><article  id="latent-and-error-faults-defined">
+
+</article></slide><slide class=''><hgroup><h2>Latent and Error Faults Visualized</h2></hgroup><article  id="latent-and-error-faults-visualized">
 
 </article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Simulation Study Results</h2></hgroup><article  id="simulation-study-results">
 
@@ -503,7 +510,7 @@ slides > slide:not(.nobackground):after {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

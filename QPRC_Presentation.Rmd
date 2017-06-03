@@ -20,13 +20,16 @@ knitr::opts_chunk$set(echo = FALSE)
 
 - Introduction
 - Modifying Principal Component Analysis
-- Simulation Design
+- Simulation of NOC Observations
+- Fault Induction
 - Simulation Results
 - Case Study
 - Conclusion and Future work
 - References
 
-
+<!---
+This is the html tag for a comment.
+-->
 
 <div class="notes">
   Smile! :) You got this!
@@ -69,7 +72,7 @@ knitr::include_graphics("RAS_DOxBlow_20170529.png")
 ```
 
 ## Competing Methods
-PCA fails because of the autocorrelated and non-linearity / non-stationarity of the data. These are a few of the methods currently employed:
+PCA fails because of the autocorrelation and non-linearity / non-stationarity of the data. These are a few of the methods currently employed:
 
 - Adaptive-Dynamic PCA (AD-PCA) of @kazor_comparison_2016
 - Kernel PCA (kPCA) of @ge_improved_2009
@@ -88,20 +91,20 @@ PCA fails because of the autocorrelated and non-linearity / non-stationarity of 
 - $\textbf{X}_s := \left(X_1(s), X_2(s), \ldots, X_p(s)\right) \in\mathbb{R}_{1 \times p}$ is a whitened realization from $\mathcal{P}$.
 - $\textbf{X} := [\textbf{X}_1\ \vdots\ \textbf{X}_2\ \vdots\ \cdots\ \vdots\ \textbf{X}_n]^T \in \mathbb{R}_{n\times p}$ is the data matrix.
 - $\textbf{X}^T\textbf{X}\in\mathbb{R}_{p \times p}^{\ge}$ is the scatter matrix of $\textbf{X}$.
-- $\mathbb{R}_{p \times p}^{\ge}$ is $p$-dimensional the cone of real, non-negative definite matrices.
+- $\mathbb{R}_{p \times p}^{\ge}$ is the $p$-dimensional cone of real, non-negative definite matrices.
 
 ## PCA Basics
 - $\textbf{X}^T\textbf{X} := \underset{p \times p}{\textbf{P}} \times \underset{p \times p}{\boldsymbol\Lambda} \times \underset{p \times p}{\textbf{P}}^T$ is the eigendecomposition of the scatter matrix.
 - $\textbf{P}^T$ is the $p \times p$ orthogonal matrix of eigenvectors.
 - $\boldsymbol\Lambda$ is the diagonal matrix of the $p$ eigenvalues.
-- $\textbf{P}_d$ is the $p\times d$ projection matrix preserving the total data variation corresponding to 
+- $\textbf{P}_d$ is the $p\times d$ projection matrix preserving the total data variation (energy) corresponding to 
 \[
 \left[\sum\limits_{i = 1}^d \lambda_i\right] / \text{tr}\left(\boldsymbol\Lambda\right).
 \]
 - $\textbf{Y}_s := \textbf{X}_s\textbf{P}_d \in\mathbb{R}_{1\times d}$ is the reduced-dimension representation of observation $\textbf{X}_s$.
 
 ## Adaptive PCA
-- Assume $\mathcal{P}$ is locally linear within a window $w$.
+- Assume $\mathcal{P}$ is locally linear within a window $w + n_u$.
 - Create a $w$-width rolling training window preceding index $s$ by defining
 \[
 \textbf{X}_{w} := [\textbf{X}_{s - w + 1}\ \vdots\ \textbf{X}_{s - w + 2}\ \vdots\ \cdots\ \vdots\ \textbf{X}_{s - 1}\ \vdots\ \textbf{X}_s]^T.
@@ -114,7 +117,7 @@ For an excellent summary of Adaptive and Dynamic PCA, see @ge_multivariate_2012.
 
 ## Dynamic PCA
 - Because the features are correlated over time, we include up to $\ell$ lags per feature.
-- The observation at index $s$ is now
+- The observation vector at index $s$ is now
 $$
 \begin{align}
 \text{L}(\textbf{X}_s) := &[X_1(s), X_1\left( s - 1 \right), \ldots, X_1\left( s - \ell \right),\ X_2(s), X_2\left( s - 1 \right), \ldots, X_2\left( s - \ell \right), \\
@@ -139,56 +142,54 @@ $$
 - Partition $\textbf{X}$ as $\left\{\textbf{X}^{(1)}, \textbf{X}^{(2)}, \ldots, \textbf{X}^{(K)}\right\}$, where $\textbf{X}^{(k)}$ is the ordered set of observations under state $\mathcal{S}_k$.
 -  Estimate $K$ distinct projection matrices $\left\{\textbf{P}_d^{(1)}, \textbf{P}_d^{(2)}, \ldots, \textbf{P}_d^{(K)}\right\}$ from the partitioned $\textbf{X}$.
 
+<!---
 ## MSAD-PCA
-
-
-
-# Monitoring Statistics
+- Add the chosen lagged features (Dynamic).
+- Partition the data matrix by states (Multi-State).
+- Consider observations within a rolling window (Adaptive).
+-->
 
 ## Monitoring Statistics
+These statistics are estimated non-parametrically, as discussed by @kazor_comparison_2016
 
 ### Hotelling's $T^2$
-- Let $\boldsymbol\Lambda_d := \text{diag}\left( \lambda_1, \lambda_2, \ldots, \lambda_d \right)$ be the largest $d$ eigenvalues associated with the first $d$ eigenvectors in $\mathbb{P}_d$.
-- The Hotelling's $T^2$ statistic is $T^2_{s + 1} = \textbf{Y}_{s + 1}\boldsymbol\Lambda_d^{-1} \textbf{Y}_{s + 1}^T$.
+- The $T^2$ statistic is the Mahalanobis distance of the mapped value $\textbf{Y}_{s + 1}$ from the original space into the PCA-subspace.
+- The $T^2$ statistic is $T^2_{s + 1} = \textbf{Y}_{s + 1}\boldsymbol\Lambda_d^{-1} \textbf{Y}_{s + 1}^T$, for $\boldsymbol\Lambda_d := \text{diag}\left( \lambda_1, \lambda_2, \ldots, \lambda_d \right)$.
 
 ### Squared Prediction Error
+- The *SPE* statistic measures the goodness-of-fit of the $d$-dimensional model to the $p$-dimensional process observations, or how well $\textbf{P}_d$ approximates $\textbf{P}$.
+- The *SPE* statistic is $\text{SPE}(\textbf{Y}_{s + 1}) = \left( \textbf{X}_{s + 1} - \textbf{Y}_{s + 1}\textbf{P}^T_d \right) \left( \textbf{X}_{s + 1} - \textbf{Y}_{s + 1}\textbf{P}^T_d \right)^T.$
 
-## Threshold Estimation
 
 
-
-# Simulation Design
+# Simulation of NOC Observations
 
 ## Notation
 
 ## Details of Data Generation
 - We follow @kazor_comparison_2016 and continue updating the original design of @dong_batch_1996
 
-### Errors and Latent Feature Construction
+## Errors and Latent Feature Construction
 
-### Feature and State Definitions
-
-## Faults
-
-### Shift Faults
-
-#### Faults Defined
-
-#### Faults Visualized
-
-### Drift Faults
-
-#### Faults Defined
-
-#### Faults Visualized
-
-### Latent and Error Faults
-
-#### Faults Defined
-
-#### Faults Visualized
+## Feature and State Definitions
 
 ## Monte Carlo Replication
+
+
+
+# Fault Induction
+
+## Shift Faults Defined
+
+## Shift Faults Visualized
+
+## Drift Faults Defined
+
+## Drift Faults Visualized
+
+## Latent and Error Faults Defined
+
+## Latent and Error Faults Visualized
 
 
 
