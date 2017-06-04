@@ -244,7 +244,11 @@ $$
 $$
 $\textbf{P}_2$ and $\textbf{P}_3$ rotate the features so that the states are at right angles in at least one dimension. $\boldsymbol\Lambda_2$ and $\boldsymbol\Lambda_3$ inflate or deflate the feature variances along each principal component.
 
-
+## Example Process Graph
+A single draw from the multivariate process under NOC. The vertical black line (21:40 on 2 December) marks time at which the fault would be induced.
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics("NOC_20170420.jpg")
+```
 
 ## Monte Carlo Replication
 We repeat the following process 1000 times:
@@ -270,6 +274,11 @@ For each statistic under AD- and MSAD-PCA, measure
 
 
 # Fault Induction
+
+## Fault Overview
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics("Fault_Desc_Table.JPG")
+```
 
 ## Shift Faults Defined
 
