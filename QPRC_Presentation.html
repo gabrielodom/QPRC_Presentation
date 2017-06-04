@@ -286,17 +286,137 @@ This is the html tag for a comment.
 
 </article></slide><slide class=''><hgroup><h2>Notation</h2></hgroup><article  id="notation">
 
-</article></slide><slide class=''><hgroup><h2>Details of Data Generation</h2></hgroup><article  id="details-of-data-generation">
+<p>To induce non-linearity and non-stationarity of each feature, let</p>
 
 <ul>
-<li>We follow <span class="cite">Kazor et al. (2016)</span> and continue updating the original design of <span class="cite">Dong and McAvoy (1996)</span></li>
+<li>the errors of \(t\), \(\epsilon_t\), be drawn from a first-order autoregressive process over \(s\), \(\epsilon_s = \varphi\epsilon_{s - 1} + \varepsilon\), where \(\varepsilon \sim N(0, \sigma_{\varepsilon})\),</li>
+<li>\(t_s := g(s) + \epsilon_s\) be a latent feature, with \(g\) restricted to smooth and bounded functions with \(g^{\prime}(s) \ne 0\) for some \(s\), and</li>
+<li>\(X_i(s) := X_i(t_s)\), where \(X_i\) is piecewise-defined over the state boundaries and smooth within those boundaries.</li>
+</ul>
+
+<p>Then the full non-linear, autocorrelated, non-stationary simulated process at index \(s\) is \(\textbf{X}_s := \left\langle x_1 = X_1(t_s), x_2 = X_2(t_s), \ldots, x_p = X_p(t_s) \right\rangle.\)</p>
+
+</article></slide><slide class=''><hgroup><h2>Details of Data Generation</h2></hgroup><article  id="details-of-data-generation">
+
+<p>We follow <span class="cite">Kazor et al. (2016)</span> and continue updating the original design of <span class="cite">Dong and McAvoy (1996)</span>. Thus</p>
+
+<ul>
+<li>The process dimension \(p = 3\),</li>
+<li>The cycle length is \(\omega = 7 * 24 * 60 = 10,080\), corresponding to one observation each minute over one week,</li>
+<li>The observation index \(s = 1, \ldots, \omega\),</li>
+<li>The observation at index \(s\) is given by \(\textbf{X}_s := \left\langle x_1 = X_1(t_s), x_2 = X_2(t_s), \ldots, x_p = X_p(t_s) \right\rangle\), and</li>
+<li>The autocorrelation parameter \(\varphi = 0.75\).</li>
 </ul>
 
 </article></slide><slide class=''><hgroup><h2>Errors and Latent Feature Construction</h2></hgroup><article  id="errors-and-latent-feature-construction">
 
+<ol>
+<li>Draw the first innovation from \[
+\varepsilon_1 \sim \mathcal{N}\left(\frac{1}{2}(a + b)(1 - \phi), \frac{b - a}{12}(1 - \phi ^ 2)\right),
+\] where \(a = 0.01\) and \(b = 2\). These mean and variance multipliers are from the mean and variance of the uniform\((a,b)\) distribution.</li>
+<li>Define the AR(1) error structure as \(\epsilon_s := \varphi \epsilon_{s - 1} + (1 - \varphi) \varepsilon,\quad s = 2, 3, \ldots\).</li>
+<li>Draw the latent feature \(t\) as \[
+t_s := -\cos\left(\frac{2\pi}{\omega}s\right) + \varepsilon_s,\quad s = 1, \ldots, \omega.
+\]</li>
+<li>Scale \(t_s\) into \([a, b]\).</li>
+</ol>
+
 </article></slide><slide class=''><hgroup><h2>Feature and State Definitions</h2></hgroup><article  id="feature-and-state-definitions">
 
+<ol start="5">
+
+<li>
+
+Sample three machine-error vectors of length \(\omega\), \(\textbf{e}_1, \textbf{e}_2, \textbf{e}_3\overset{i.i.d.}{\sim}\mathcal{N}(0, 0.01)\).
+
+</li>
+
+<li>
+
+Define the three feature vectors to be \[
+\begin{align*}
+x(t_s) &amp;:= t_s + \textbf{e}_1(s) \\
+y(t_s) &amp;:= t_s^2 - 3t_s + \textbf{e}_2(s) \\
+z(t_s) &amp;:= -t_s^3 + 3t_s^2 + \textbf{e}_3(s).
+\end{align*}
+\]
+
+</li>
+
+<li>
+
+<p>Change states hourly in sequence, where the three process states are</p>
+
+<ul>
+<li>\(\mathcal{S}_1\): \(\textbf{X}(t_s) := \langle x(t_s), y(t_s), z(t_s) \rangle \cdot \textbf{I}\)</li>
+<li>\(\mathcal{S}_2\): \(\textbf{X}(t_s) := \langle x(t_s), y(t_s), z(t_s) \rangle \cdot \textbf{P}_2 \boldsymbol\Lambda_2\)</li>
+<li>\(\mathcal{S}_3\): \(\textbf{X}(t_s) := \langle x(t_s), y(t_s), z(t_s) \rangle \cdot \textbf{P}_3 \boldsymbol\Lambda_3\)</li>
+</ul>
+
+</li>
+
+</ol>
+
+</article></slide><slide class=''><hgroup><h2>Process Projections</h2></hgroup><article  id="process-projections">
+
+<p>The process-specific scaling and projection matrices are: \[
+\begin{gather}
+\textbf{P}_2 = \begin{bmatrix}
+     0 &amp;  0.50 &amp; -0.87 \\
+     0 &amp;  0.87 &amp;  0.50 \\
+     1 &amp;  0    &amp;  0   
+    \end{bmatrix} &amp; &amp;
+    \boldsymbol\Lambda_2 = \begin{bmatrix}
+     1 &amp;  0   &amp; 0 \\
+     0 &amp;  0.5 &amp; 0 \\
+     0 &amp;  0   &amp; 2   
+    \end{bmatrix} \\
+    &amp; &amp; \\
+\textbf{P}_3 = \begin{bmatrix}
+     0 &amp;  0.87 &amp; -0.50 \\
+    -1 &amp;  0    &amp;  0    \\
+     0 &amp;  0.50 &amp;  0.87
+    \end{bmatrix} &amp; &amp;
+    \boldsymbol\Lambda_3 = \begin{bmatrix}
+     0.25 &amp;  0   &amp; 0 \\
+     0    &amp;  0.1 &amp; 0 \\
+     0    &amp;  0   &amp; 0.75   
+    \end{bmatrix}
+\end{gather}
+\] \(\textbf{P}_2\) and \(\textbf{P}_3\) rotate the features so that the states are at right angles in at least one dimension. \(\boldsymbol\Lambda_2\) and \(\boldsymbol\Lambda_3\) inflate or deflate the feature variances along each principal component.</p>
+
 </article></slide><slide class=''><hgroup><h2>Monte Carlo Replication</h2></hgroup><article  id="monte-carlo-replication">
+
+<p>We repeat the following process 1000 times:</p>
+
+<ol>
+<li>Draw a random set of observations:
+
+<ul>
+<li>one set of NOC under the single-state model,</li>
+<li>one set of NOC under the multi-state model.</li>
+</ul></li>
+<li>Apply each of the six single-state and nine multi-state faults (discussed in the next section) to both NOC data sets. There will be 17 total versions of the data set.</li>
+<li>Train the fault detection system with 75% of the observations:
+
+<ul>
+<li>7,560 observations for the single-state model,</li>
+<li>2,520 observations per state for the multi-state model.</li>
+</ul></li>
+<li>Calculate AD- and MSAD-PCA projections for all 17 data sets.</li>
+</ol>
+
+</article></slide><slide class=''><hgroup><h2>Performance Metrics</h2></hgroup><article  id="performance-metrics">
+
+<p>An observation is flagged as suspicious if the monitoring statistic is beyond the calculated non-parametric threshold. An observation will trigger an alarm if it is the \(k^{th}\) observation in a row to be flagged. For this simulation study, we triggered an alarm at the third consecutive flag.</p>
+
+<p>For each statistic under AD- and MSAD-PCA, measure</p>
+
+<ul>
+<li>The false alarm rate from the NOC data sets. This is the number of false alarms recorded in the process observations without faults.</li>
+<li>The fault detection indicator for each of the 15 fault data sets.</li>
+<li>The time (in minutes) until the statistic detected the fault. The earliest a statistic can trigger an alarm is after 3 minutes.</li>
+</ul>
 
 </article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Fault Induction</h2></hgroup><article  id="fault-induction">
 
@@ -510,7 +630,7 @@ slides > slide:not(.nobackground):after {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
