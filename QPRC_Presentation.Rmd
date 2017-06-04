@@ -276,21 +276,78 @@ For each statistic under AD- and MSAD-PCA, measure
 # Fault Induction
 
 ## Fault Overview
+Induce one of the following faults at $s = 8,500$.
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault_Desc_Table.JPG")
 ```
 
 ## Shift Faults Defined
 
-## Shift Faults Visualized
+- __Fault 1A__: $\textbf{X}^*(t_s) = \textbf{X}(t_s) + 2,\ s \ge 8500.$ This fault is a shift for all features in all states.
+
+- __Fault 1B__: $x^*(t_s) = x^*(t_s) + 2,\ s \ge 8500.$ This fault is a shift for one feature in all states.
+
+- __Fault 1C__: $x^*(t_s) = x^*(t_s) + 0.5,\ z^*(t_s) = z^*(t_s) + 0.5,\ s \ge 8500.$ This fault simulates a shift in two of the process monitoring features in $\mathcal{S}_3$ only.
+
+## Fault 1A
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics("Fault1A_20170420.jpg")
+```
+
+## Fault 1B
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics("Fault1B_20170420.jpg")
+```
+
+## Fault 1C
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics("Fault1C_20170420.jpg")
+```
 
 ## Drift Faults Defined
 
-## Drift Faults Visualized
+- __Fault 2A__: $\textbf{X}^*(t_s) = \textbf{X}(t_s) + (s - 8500)\times 10^{-3}$, $s > 8500.$ This fault simulates a positive drift across all the process monitoring features.
+
+- __Fault 2B__: $y^*(t_s) = y(t_s) + (s - 8500)\times 10^{-3}$ and $z^*(t_s) = z(t_s) + (s - 8500)\times 10^{-3}$, for $s > 8500.$ This fault simulates a positive drift in two of the process monitoring features.
+
+- __Fault 2C__: $y^*(t_s) = y(t_s) - 1.5 \times \frac{s - 8500}{10080 - 8500}$, for $s > 8500.$ This fault simulates a negative drift in one of the process monitoring features in $\mathcal{S}_2$ only.
+
+## Fault 2A
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics("Fault2A_20170420.jpg")
+```
+
+## Fault 2B
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics("Fault2B_20170420.jpg")
+```
+
+## Fault 2C
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics("Fault2C_20170420.jpg")
+```
 
 ## Latent and Error Faults Defined
+- __Fault 3A__: $\textbf{X}^*(t_s) = \textbf{X}(t_s^*)$, where $t_s^* = \left[\frac{\delta(s - 8500)}{\omega - 8500} + 1\right]t_s$. For $s > 8500,$ this fault will amplify the underlying latent effect for all features. The maximum latent drift of this fault will be $\delta + 1$. For the single-state simlation, $\delta + 1 = 3$; for the multi-state simulation, $\delta + 1 = 6$.
 
-## Latent and Error Faults Visualized
+- __Fault 3B__: $z^*(t_s) = z(t_s^*)$, where $t_s^* = \ln|t_s|$, $s \ge 8500.$ This fault will dampen the underlying latent effect for $x_3$ if $t_s > 1$ and amplify this effect if $t_s < 1$.
+
+- __Fault 3C__: $y^*(t_s) = y(t_s) + 2 * \textbf{e}_3(s) - 0.25$, for $s > 8500.$ This fault simulates an error increase and negative shift, but only applied to one process monitoring feature in $\mathcal{S}_2$.
+    
+## Fault 3A
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics("Fault3A_20170420.jpg")
+```
+
+## Fault 3B
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics("Fault3B_20170420.jpg")
+```
+
+## Fault 3C
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics("Fault3C_20170420.jpg")
+```
 
 
 
