@@ -283,68 +283,77 @@ knitr::include_graphics("Fault_Desc_Table.JPG")
 
 ## Shift Faults Defined
 
-- __Fault 1A__: $\textbf{X}^*(t_s) = \textbf{X}(t_s) + 2,\ s \ge 8500.$ This fault is a shift for all features in all states.
+- __Fault 1A__: $\textbf{X}^*(t_s) = \textbf{X}(t_s) + 2,\ s \ge 8500.$ This fault is a shift for all features in all states. This shift is added *before* state projections.
 
-- __Fault 1B__: $x^*(t_s) = x^*(t_s) + 2,\ s \ge 8500.$ This fault is a shift for one feature in all states.
+- __Fault 1B__: $x^*(t_s) = x^*(t_s) + 2,\ s \ge 8500.$ This fault is a shift for one feature in all states. This shift is added *before* state projections.
 
-- __Fault 1C__: $x^*(t_s) = x^*(t_s) + 0.5,\ z^*(t_s) = z^*(t_s) + 0.5,\ s \ge 8500.$ This fault simulates a shift in two of the process monitoring features in $\mathcal{S}_3$ only.
+- __Fault 1C__: $x^*(t_s) = x^*(t_s) + 0.5,\ z^*(t_s) = z^*(t_s) + 0.5,\ s \ge 8500.$ This fault simulates a shift in two of the process monitoring features in $\mathcal{S}_3$ only. This shift is added *after* state projections.
 
 ## Fault 1A
+Add 2 to all features in all states.
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault1A_20170420.jpg")
 ```
 
 ## Fault 1B
+Add 2 in all states to feature $X$ only. This shift in feature $X$ will infect features $Y$ and $Z$ through $\textbf{P}_2\boldsymbol\Lambda_2$ and $\textbf{P}_3\boldsymbol\Lambda_3$. 
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault1B_20170420.jpg")
 ```
 
 ## Fault 1C
+Add 0.5 to features $X$ and $Z$ only in state $\mathcal{S}_3$. This fault is induced after state projections.
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault1C_20170420.jpg")
 ```
 
 ## Drift Faults Defined
 
-- __Fault 2A__: $\textbf{X}^*(t_s) = \textbf{X}(t_s) + (s - 8500)\times 10^{-3}$, $s > 8500.$ This fault simulates a positive drift across all the process monitoring features.
+- __Fault 2A__: $\textbf{X}^*(t_s) = \textbf{X}(t_s) + (s - 8500)\times 10^{-3}$, $s > 8500.$ This fault simulates a positive drift across all the process monitoring features. This drift is added *before* state projections.
 
-- __Fault 2B__: $y^*(t_s) = y(t_s) + (s - 8500)\times 10^{-3}$ and $z^*(t_s) = z(t_s) + (s - 8500)\times 10^{-3}$, for $s > 8500.$ This fault simulates a positive drift in two of the process monitoring features.
+- __Fault 2B__: $y^*(t_s) = y(t_s) + (s - 8500)\times 10^{-3}$ and $z^*(t_s) = z(t_s) + (s - 8500)\times 10^{-3}$, for $s > 8500.$ This fault simulates a positive drift in two of the process monitoring features. This drift is added *before* state projections.
 
-- __Fault 2C__: $y^*(t_s) = y(t_s) - 1.5 \times \frac{s - 8500}{10080 - 8500}$, for $s > 8500.$ This fault simulates a negative drift in one of the process monitoring features in $\mathcal{S}_2$ only.
+- __Fault 2C__: $y^*(t_s) = y(t_s) - 1.5 \times \frac{s - 8500}{10080 - 8500}$, for $s > 8500.$ This fault simulates a negative drift in one of the process monitoring features in $\mathcal{S}_2$ only. This drift is added *after* state projections.
 
 ## Fault 2A
+Drift all features in all states by a maximum $+1.58$.
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault2A_20170420.jpg")
 ```
 
 ## Fault 2B
+Drift features $Y$ and $Z$ in all states by a maximum $+1.58$. This drift in features $Y$ and $Z$ will infect feature $X$ through $\textbf{P}_2\boldsymbol\Lambda_2$ and $\textbf{P}_3\boldsymbol\Lambda_3$. 
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault2B_20170420.jpg")
 ```
 
 ## Fault 2C
+Drift feature $Y$ by a maximum $-1.5$ only in state $\mathcal{S}_2$. This fault is induced after state projections.
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault2C_20170420.jpg")
 ```
 
 ## Latent and Error Faults Defined
-- __Fault 3A__: $\textbf{X}^*(t_s) = \textbf{X}(t_s^*)$, where $t_s^* = \left[\frac{\delta(s - 8500)}{\omega - 8500} + 1\right]t_s$. For $s > 8500,$ this fault will amplify the underlying latent effect for all features. The maximum latent drift of this fault will be $\delta + 1$. For the single-state simlation, $\delta + 1 = 3$; for the multi-state simulation, $\delta + 1 = 6$.
+- __Fault 3A__: $\textbf{X}^*(t_s) = \textbf{X}(t_s^*)$, where $t_s^* = \left[\frac{\delta(s - 8500)}{\omega - 8500} + 1\right]t_s$. For $s > 8500,$ this fault will amplify the underlying latent effect for all features. The maximum latent drift of this fault will be $\delta + 1$. For the single-state simlation, $\delta + 1 = 3$; for the multi-state simulation, $\delta + 1 = 6$. This mutation is added *before* state projections.
 
-- __Fault 3B__: $z^*(t_s) = z(t_s^*)$, where $t_s^* = \ln|t_s|$, $s \ge 8500.$ This fault will dampen the underlying latent effect for $x_3$ if $t_s > 1$ and amplify this effect if $t_s < 1$.
+- __Fault 3B__: $z^*(t_s) = z(t_s^*)$, where $t_s^* = \ln|t_s|$, $s \ge 8500.$ This fault will dampen the underlying latent effect for $x_3$ if $t_s > 1$ and amplify this effect if $t_s < 1$. This mutation is added *before* state projections.
 
-- __Fault 3C__: $y^*(t_s) = y(t_s) + 2 * \textbf{e}_3(s) - 0.25$, for $s > 8500.$ This fault simulates an error increase and negative shift, but only applied to one process monitoring feature in $\mathcal{S}_2$.
+- __Fault 3C__: $y^*(t_s) = y(t_s) + 2 * \textbf{e}_2(s) - 0.25$, for $s > 8500.$ This fault simulates an error increase and negative shift, but only applied to one process monitoring feature in $\mathcal{S}_2$. This mutation is added *after* state projections.
     
 ## Fault 3A
+Drift the latent variable $t$ by a maximum of $+6$ for all features in all states. 
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault3A_20170420.jpg")
 ```
 
 ## Fault 3B
+Mutate the latent variable $t$ by $\log t$ in all states for feature $Z$ only. This mutation through feature $Z$ will infect features $X$ and $Y$ through $\textbf{P}_2\boldsymbol\Lambda_2$ and $\textbf{P}_3\boldsymbol\Lambda_3$. 
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault3B_20170420.jpg")
 ```
 
 ## Fault 3C
+Double and shift by $-0.25$ the machine-error vector on feature $Y$ in state $\mathcal{S}_2$ only. This fault is induced after state projections.
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault3C_20170420.jpg")
 ```
@@ -354,11 +363,26 @@ knitr::include_graphics("Fault3C_20170420.jpg")
 # Simulation Study Results
 
 ## Simulation Results
+We present an example of parsing the following tables:
+
+- Consider the $T^2$ monitoring statistic on multi-state process data after projections with the AD-PCA projection matrix.
+- This statistic has an expected ~18 false alarms per day.
+- Now consider this statistic's monitoring behavior for Fault 1C.
+- This statistic detects a fault in 96.5% of the 1000 simulation replicates.
+- When the $T^2$ statistic detected a fault, it did so after 122 minutes, on average.
+- When the $T^2$ statistic detected a fault, it did so within 490 minutes in 95% of cases.
+- The cell is not shaded green, so this statistic had less than median detection probability. The median detection probability was 100%.
+
 
 ## False Alarm Rates
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics("False_Alarms_Table.JPG")
+```
 
 ## Detection Times
-
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics("Detection_Times_Table.JPG")
+```
 
 
 # Case Study
