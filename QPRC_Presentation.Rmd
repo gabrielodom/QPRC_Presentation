@@ -84,7 +84,15 @@ knitr::include_graphics("RAS_DOxBlow_20170529.png")
 ```
 
 ## Data Cleaning
+- Features were recorded on different time scales:
+    + 5 second,
+    + 1 minute,
+    + 10 minute.
+- Blower Operation was recorded on the 1-minute scale.
+- Aggregate the 5-second-level observations to the 1-minute scale.
+- Downscale and jitter the 10-minute-level observations to the 1-minute scale.
 
+As of a few months ago, all process features are now recorded on the same 1-minute interval.
 
 
 # Modifying PCA
@@ -408,14 +416,14 @@ Under the Multi-State model:
 - The MSAD-PCA *SPE* monitoring statistic offers an excellent combination of sensitivity and high detection probability.
 - The MSAD-PCA $T^2$ monitoring statistic offers an excellent combination of specificity and high detection probability.
 
-Under the Single-State model, the pairs of AD-PCA and MSAD-PCA process monitoring statistics perform similarly, so we do not expect significant loss of power when using the MSAD-PCA procedure.
+Under the Single-State model, the pairs of AD-PCA and MSAD-PCA process monitoring statistics perform similarly, so we do not expect significant loss of power when using the MSAD-PCA procedure to detect faults.
 
 
 
 # Case Study Results
 
 ## False Alarm Rates
-We increased the flags to trigger an alarm from 3 to 5 for the real case due to the strong serial autocorrelation. Note that these are all greater than or equal to the set threshold level of $\alpha = 0.1\%$.
+We increased the flags to trigger an alarm from 3 to 5 for the real case due to strong serial autocorrelation. Note that these false alarm rates are all greater than or equal to the set threshold level of $\alpha = 0.1\%$.
 
                    MSAD $T^2$   MSAD *SPE*   AD $T^2$   AD *SPE*
 ----------------   ----------   ----------   --------   --------
