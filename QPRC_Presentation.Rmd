@@ -19,13 +19,14 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Overview of Topics
 
 - Introduction
+- Motivating Example
 - Modifying Principal Component Analysis
 - Simulation of NOC Observations
 - Fault Induction
-- Simulation Results
-- Case Study
-- Conclusion and Future work
-- References
+- Simulation Study Results
+- Case Study Results
+- Software Package for `R`
+- Summary and References
 
 <!---
 This is the html tag for a comment.
@@ -51,8 +52,9 @@ This is the html tag for a comment.
 - Linear dimension reduction (LDR) allows us to simplify complex data structures to more simple data structures via linear combinations of features.
 - LDR is built around eigen-decomposition / principal component analysis (PCA) or the singular value decomposition (SVD).
 
+# Motivating Example
 
-## Motivating Example
+## Facility and Process Details
 - This work is motivated by our partnership with the Colorado School of Mines on the ReNUWit water preservation grant.
 - Our team manages a decentralised wastewater treatment (WWT) plant in Golden, CO.
 - We measure 40 features and their lagged values (80 total features).
@@ -67,19 +69,21 @@ knitr::include_graphics("Vuono_SBMBR_Design.JPG")
 ```
 
 ## Multi-State Process
+```{r, fig.align = 'center', out.width='75%'}
+knitr::include_graphics("Blower_State_Flow_Chart_Densities.jpg")
+```
+
+## Example Features
+```{r, fig.align = 'center', out.width='75%'}
+knitr::include_graphics("Four_MAD_types_eg_plot_16022017.JPG")
+```
+
+## Example Feature by Blower
 ```{r, fig.align = 'center', out.width='85%', out.height='50%'}
 knitr::include_graphics("RAS_DOxBlow_20170529.png")
 ```
 
-## Competing Methods
-PCA fails because of the autocorrelation and non-linearity / non-stationarity of the data. These are a few of the methods currently employed:
-
-- Adaptive-Dynamic PCA (AD-PCA) of @kazor_comparison_2016
-- Kernel PCA (kPCA) of @ge_improved_2009
-- Adaptive kPCA (AkPCA) of @chouaib_adaptive_2013
-- Local Linear Embedding (LLE) @miao_nonlinear_2013
-- Multi-dimensional scaling and isometric mapping (IsoMap) of @tenenbaum_global_2000
-- Semidefinite Embedding (SDE) / Maximimum Variance Unfolding (MVU) of @weinberger_unsupervised_2006
+## Data Cleaning
 
 
 
@@ -102,6 +106,18 @@ PCA fails because of the autocorrelation and non-linearity / non-stationarity of
 \left[\sum\limits_{i = 1}^d \lambda_i\right] / \text{tr}\left(\boldsymbol\Lambda\right).
 \]
 - $\textbf{Y}_s := \textbf{X}_s\textbf{P}_d \in\mathbb{R}_{1\times d}$ is the reduced-dimension representation of observation $\textbf{X}_s$.
+
+## Competing Methods
+PCA fails because of the autocorrelation and non-linearity / non-stationarity of the data. These are a few of the methods currently employed:
+
+- Adaptive-Dynamic PCA (AD-PCA) of @kazor_comparison_2016
+- Kernel PCA (kPCA) of @ge_improved_2009
+- Adaptive kPCA (AkPCA) of @chouaib_adaptive_2013
+- Local Linear Embedding (LLE) @miao_nonlinear_2013
+- Multi-dimensional scaling and isometric mapping (IsoMap) of @tenenbaum_global_2000
+- Semidefinite Embedding (SDE) / Maximimum Variance Unfolding (MVU) of @weinberger_unsupervised_2006
+
+We combine Adaptive, Dynamic, and Multi-State modifications to PCA.
 
 ## Adaptive PCA
 - Assume $\mathcal{P}$ is locally linear within a window $w + n_u$.
@@ -347,7 +363,7 @@ knitr::include_graphics("Fault3A_20170420.jpg")
 ```
 
 ## Fault 3B
-Mutate the latent variable $t$ by $\log t$ in all states for feature $Z$ only. This mutation through feature $Z$ will infect features $X$ and $Y$ through $\textbf{P}_2\boldsymbol\Lambda_2$ and $\textbf{P}_3\boldsymbol\Lambda_3$. 
+Mutate $t$ by $\log t$ in all states for feature $Z$ only. This mutation through feature $Z$ will infect features $X$ and $Y$ through $\textbf{P}_2\boldsymbol\Lambda_2$ and $\textbf{P}_3\boldsymbol\Lambda_3$. 
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault3B_20170420.jpg")
 ```
@@ -384,28 +400,51 @@ knitr::include_graphics("False_Alarms_Table.JPG")
 knitr::include_graphics("Detection_Times_Table.JPG")
 ```
 
-
-# Case Study
-
-## Motivation
-
-## Facility and Process Details
-
-## Data Cleaning
-
-## Method Results
-
-### False Alarm Rates
-
-### Fault Detection Times
+## Comparison
 
 
 
-# Conclusion
+# Case Study Results
 
-## Conclusion
+## False Alarm Rates
+
+## Fault Detection Times
 
 
+
+# Software Package for `R`
+
+## Package `mvMonitoring`
+- No website: our package is currently in private beta-testing at the facility.    
+- So far, engineers have been pleased with what we've developed, and they are working with us closely to polish the package. 
+- `mspProcessData()` generates random draws from a serially autocorrelated and nonstationary multi-state (or single-state) multivariate process.
+- `mspTrain()` trains the projection matrix and non-parametric fault detection thresholds.
+- `mspMonitor()` assesses incoming process observations and classifies them as normal or abnormal.
+- `mspWarning()` keeps a running tally of abnormal observations and raises an alarm if necessary.
+- Alarms can be sent via email or SMS from the remote facility to the operators.
+
+
+
+
+# Summary and References
+
+## Summary
+
+
+## Future Work
+
+
+<style>
+  slides > slide { overflow: scroll; }
+slides > slide:not(.nobackground):after {
+  content: '';
+}
+</style>
+  
+## References {.smaller}
+  
+  
+<!--
 # Multi-State Multivariate Process Monitoring
 
 ## The Problem Defined
@@ -450,39 +489,4 @@ AD T2            35      1114      1406      2.3%   1.5%            21.6
 + Blower operation: controls aeration of the mixture.
 + Sequencing Batch Bioreactor Phase: fill, mix, steep, or release.
 + Membrane Bioreactor Mode: mixing, cleaning, etc.
-
-## Package `mvMonitoring`
-- No website: our package is currently in private beta-testing at the facility.    
-- So far, engineers have been pleased with what we've developed so far, and they are working with us closely to polish the package. 
-- `mspProcessData()` generates random draws from a serially autocorrelated and nonstationary multi-state (or single-state) multivariate process.
-- `mspTrain()` trains the projection matrix and fault detection components.
-- `mspMonitor()` assesses incoming process observations and classifies them as normal or abnormal.
-- `mspWarning()` keeps a running tally of abnormal observations and raises an alarm if necessary.
-- Alarms can be sent via email or SMS from the remote facility to the operators or to the central facility.
-
-
-
-
-# Summary and References
-
-## Summary
-
-- We have described three applications of linear dimension reduction.
-- We have presented three accompanying real data sets and discussed their details.
-- We have discussed three code packages.
-
-## Future Work
-- Savvy Feature Filtering: use the SVD "backwards" to select features which have strong influence on a classifier.
-- Optimal Principal Component Selection: rather than choosing features by the largest eigenvalues, choose features by their contribution to between-class variance.
-
-<style>
-  slides > slide { overflow: scroll; }
-slides > slide:not(.nobackground):after {
-  content: '';
-}
-</style>
-  
-  ## References {.smaller}
-  
-  
-  
+--->
