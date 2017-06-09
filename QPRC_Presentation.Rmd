@@ -1,6 +1,6 @@
 ---
 title: "Multi-State Multivariate Statistical Process Monitoring"
-author: "Dr. Gabriel Odom"
+author: Gabriel J. Odom | Department of Statistical Science | Baylor University <br /> National Science Foundation PFI:BIC Award No. 1632227 
 header-includes: \usepackage[linesnumbered, ruled]{algorithm2e}
 output:
   ioslides_presentation: null
@@ -11,6 +11,11 @@ bibliography: qprc_bib_abbr.bib
 widescreen: yes
 ---
 
+<!--
+Put funding source:  National Science Foundation PFI:BIC Award No: 1632227
+
+Put your department:  Department of Statistical Science, and write out "Baylor University"  Most folks won't know what "BU" stands for.
+-->
 
   ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -18,12 +23,9 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Overview of Topics
 
-- Introduction
-- Motivating Example
-- Modifying Principal Component Analysis
-- Simulation of NOC Observations
-- Fault Induction
-- Simulation Study Results
+- Introduction & Motivating Example
+- Multi-State AD-PCA
+- Simulation Study
 - Case Study Results
 - Software Package for `R`
 - Summary and References
@@ -36,15 +38,16 @@ This is the html tag for a comment.
   Smile! :) You got this!
   </div>
   
-# Introduction
+# Introduction & Motivating Example
   
 ## Introduction
 - Many factories or other closed production systems use real-time online process monitoring.
 - We aim to detect potential problems within the system before they cause damage or cause the process to shut down.
-- The process has many sensors, with a time series for each.
-- These sensor readings are not independent across time, and their values may have daily trends / perturbations (autocorrelated and non-stationary).
-- The sensors themselves are not independent (cross-correlation of the multiple time series).
-- Distributions of process variables can change dramatically with operator input.
+- Data description:
+    + non-Gaussian process
+    + multiple correlated variables
+    + temporal dependence of observations
+    + non-stationary due to operator input an ambient conditions
 
 ## Process Dimensionality
 - In multivariate contexts, the number of parameters to estimate increases quadratically with dimension.
@@ -52,20 +55,18 @@ This is the html tag for a comment.
 - Linear dimension reduction (LDR) allows us to simplify complex data structures to more simple data structures via linear combinations of features.
 - LDR is built around eigen-decomposition / principal component analysis (PCA) or the singular value decomposition (SVD).
 
-# Motivating Example
-
 ## Facility and Process Details
 - This work is motivated by our partnership with the Colorado School of Mines on the ReNUWit water preservation grant.
 - Our team manages a decentralised wastewater treatment (WWT) plant in Golden, CO.
 - We measure 40 features and their lagged values (80 total features).
 - The continuous features are aggregated to the minute-level.
-- We aim to develop a monitoring process capable of quickly and accurately detecting when a part of the cleaning process malfunctions before human operators.
-- Earlier work applying PCA to WWT was completed by @wise_principal_1988 and @kresta_multivariate_1991
-- More recent work applying PCA was by @baggiani_real-time_2009, @sanchez-fernandez_fault_2015, and @kazor_comparison_2016
+- We aim to quickly and accurately detect process malfunctions before human operators by incorporating known system state behavior.
+- Stock PCA applied to WWT by @wise_principal_1988 and chemical process monitoring by @kresta_multivariate_1991
+- @baggiani_real-time_2009 used adaptive PCA, @sanchez-fernandez_fault_2015 used distributive PCA, and @kazor_comparison_2016 used adaptive-dynamic PCA to monitor WWT processes.
 
 ## The Bioreactor System
-```{r, fig.align = 'center', out.width='90%'}
-knitr::include_graphics("Vuono_SBMBR_Design.JPG")
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics("Kate_SBMBR_Design.JPG")
 ```
 
 ## Multi-State Process
@@ -73,16 +74,19 @@ knitr::include_graphics("Vuono_SBMBR_Design.JPG")
 knitr::include_graphics("Blower_State_Flow_Chart_Densities.jpg")
 ```
 
+<!--
 ## Example Features
 ```{r, fig.align = 'center', out.width='75%'}
 knitr::include_graphics("Four_MAD_types_eg_plot_16022017.JPG")
 ```
+-->
 
 ## Example Feature by Blower
 ```{r, fig.align = 'center', out.width='85%', out.height='50%'}
 knitr::include_graphics("RAS_DOxBlow_20170529.png")
 ```
 
+<!--
 ## Data Cleaning
 - Features were recorded on different time scales:
     + 5 second,
@@ -93,20 +97,24 @@ knitr::include_graphics("RAS_DOxBlow_20170529.png")
 - Downscale and jitter the 10-minute-level observations to the 1-minute scale.
 
 As of a few months ago, all process features are now recorded on the same 1-minute interval.
+-->
 
 
-# Modifying PCA
+# Multi-State AD-PCA
 
+<!--
 ## Process Notation
-- $\mathcal{P}$ is a real non-linear, autocorrelated, non-stationary, state-switching, $p$-dimensional multivariate process.
+- $\mathcal{P}$ is a real $p$-dimensional multivariate process.
 - $s = 1, \ldots, n$ is the observation index of $\mathcal{P}$.
 - $\textbf{X}_s := \left(X_1(s), X_2(s), \ldots, X_p(s)\right) \in\mathbb{R}_{1 \times p}$ is a whitened realization from $\mathcal{P}$.
 - $\textbf{X} := [\textbf{X}_1\ \vdots\ \textbf{X}_2\ \vdots\ \cdots\ \vdots\ \textbf{X}_n]^T \in \mathbb{R}_{n\times p}$ is the data matrix.
 - $\textbf{X}^T\textbf{X}\in\mathbb{R}_{p \times p}^{\ge}$ is the scatter matrix of $\textbf{X}$.
 - $\mathbb{R}_{p \times p}^{\ge}$ is the $p$-dimensional cone of real, non-negative definite matrices.
+-->
 
 ## PCA Basics
-- $\textbf{X}^T\textbf{X} := \underset{p \times p}{\textbf{P}} \times \underset{p \times p}{\boldsymbol\Lambda} \times \underset{p \times p}{\textbf{P}}^T$ is the eigendecomposition of the scatter matrix.
+- $\textbf{X} := [\textbf{X}_1\ \vdots\ \textbf{X}_2\ \vdots\ \cdots\ \vdots\ \textbf{X}_n]^T \in \mathbb{R}_{n\times p}$, where $\textbf{X}_s := \left(X_1(s), X_2(s), \ldots, X_p(s)\right)$ is a realization from process  $\mathcal{P}$ on index $s = 1, \ldots, n$.
+- $\textbf{X}^T\textbf{X} := \textbf{P} \times \boldsymbol\Lambda \times \textbf{P}^T$ is the eigendecomposition of the scatter matrix.
 - $\textbf{P}^T$ is the $p \times p$ orthogonal matrix of eigenvectors.
 - $\boldsymbol\Lambda$ is the diagonal matrix of the $p$ eigenvalues.
 - $\textbf{P}_d$ is the $p\times d$ projection matrix preserving the total data variation (energy) corresponding to 
@@ -116,7 +124,7 @@ As of a few months ago, all process features are now recorded on the same 1-minu
 - $\textbf{Y}_s := \textbf{X}_s\textbf{P}_d \in\mathbb{R}_{1\times d}$ is the reduced-dimension representation of observation $\textbf{X}_s$.
 
 ## Competing Methods
-PCA fails because of the autocorrelation and non-linearity / non-stationarity of the data. These are a few of the methods currently employed:
+PCA is non-optimal because of the autocorrelation and non-linearity / non-stationarity of the data. Some alternatives are:
 
 - Adaptive-Dynamic PCA (AD-PCA) of @kazor_comparison_2016
 - Kernel PCA (kPCA) of @ge_improved_2009
@@ -136,8 +144,6 @@ We combine Adaptive, Dynamic, and Multi-State modifications to PCA.
 - Calculate the scatter matrix with $\textbf{X}_{w}$ instead of the full data matrix $\textbf{X}$.
 - Estimate $\textbf{P}_d$.
 - After performing necessary monitoring statistics on the new observations, ''learn'' the newest $n_u$ observations, ''forget'' the oldest $n_u$ observations, and estimate the new scatter matrix.
-
-For an excellent summary of Adaptive and Dynamic PCA, see @ge_multivariate_2012.
 
 ## Dynamic PCA
 - Because the features are correlated over time, we include up to $\ell$ lags per feature.
@@ -188,6 +194,7 @@ These statistics are estimated non-parametrically, as discussed by @kazor_compar
 
 # Simulation of NOC Observations
 
+<!--
 ## Notation
 To induce non-linearity and non-stationarity of each feature, let
 
@@ -196,10 +203,12 @@ To induce non-linearity and non-stationarity of each feature, let
 - $X_i(s) := X_i(t_s)$, where $X_i$ is piecewise-defined over the state boundaries and smooth within those boundaries.
 
 Then the full non-linear, autocorrelated, non-stationary simulated process at index $s$ is $\textbf{X}_s := \left\langle x_1 = X_1(t_s), x_2 = X_2(t_s), \ldots, x_p = X_p(t_s) \right\rangle.$
+-->
 
 ## Details of Data Generation
 We follow @kazor_comparison_2016 and continue updating the original design of @dong_batch_1996. Thus
 
+- the errors of $t$, $\epsilon_t$,  be drawn from a first-order autoregressive process over $s$, where $\varepsilon \sim N(0, \sigma_{\varepsilon})$,
 - The process dimension $p = 3$,
 - The cycle length is $\omega = 7 * 24 * 60 = 10,080$, corresponding to one observation each minute over one week,
 - The observation index $s = 1, \ldots, \omega$,
@@ -268,11 +277,8 @@ $$
 $$
 $\textbf{P}_2$ and $\textbf{P}_3$ rotate the features so that the states are at right angles in at least one dimension. $\boldsymbol\Lambda_2$ and $\boldsymbol\Lambda_3$ inflate or deflate the feature variances along each principal component.
 
-## Example Process Graph
-A single draw from the multivariate process under NOC. The vertical black line (21:40 on 2 December) marks time at which the fault would be induced.
-```{r, fig.align = 'center', out.width='100%'}
-knitr::include_graphics("NOC_20170420.jpg")
-```
+## Example Projections Figure
+ADD FIGURE
 
 ## Monte Carlo Replication
 We set the threshold to $\alpha = 0.001$ and repeat the following 1000 times:
@@ -291,9 +297,9 @@ An observation is flagged as suspicious if the monitoring statistic is beyond th
 
 For each statistic under AD- and MSAD-PCA, measure
 
-- The false alarm rate from the NOC data sets. This is the number of false alarms recorded in the process observations without faults.
-- The fault detection indicator for each of the 15 fault data sets.
-- The time (in minutes) until the statistic detected the fault. The earliest a statistic can trigger an alarm is after 3 minutes.
+- The **false alarm rate** from the NOC data sets. This is the number of false alarms recorded in the process observations without faults.
+- The **fault detection indicator** for each of the 15 fault data sets.
+- The **time to detection**; the earliest a statistic can trigger an alarm is after 3 minutes.
 
 
 
@@ -305,6 +311,7 @@ Induce one of the following faults at $s = 8,500$.
 knitr::include_graphics("Fault_Desc_Table.JPG")
 ```
 
+<!--
 ## Shift Faults Defined
 
 - __Fault 1A__: $\textbf{X}^*(t_s) = \textbf{X}(t_s) + 2,\ s \ge 8500.$ This fault is a shift for all features in all states. This shift is added *before* state projections.
@@ -312,12 +319,21 @@ knitr::include_graphics("Fault_Desc_Table.JPG")
 - __Fault 1B__: $x^*(t_s) = x^*(t_s) + 2,\ s \ge 8500.$ This fault is a shift for one feature in all states. This shift is added *before* state projections.
 
 - __Fault 1C__: $x^*(t_s) = x^*(t_s) + 0.5,\ z^*(t_s) = z^*(t_s) + 0.5,\ s \ge 8500.$ This fault simulates a shift in two of the process monitoring features in $\mathcal{S}_3$ only. This shift is added *after* state projections.
+-->
 
+## Normal Process
+A single draw from the multivariate process under NOC. The vertical black line (21:40 on 2 December) marks time at which the fault would be induced.
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics("NOC_20170420.jpg")
+```
+
+<!--
 ## Fault 1A
 Add 2 to all features in all states.
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault1A_20170420.jpg")
 ```
+-->
 
 ## Fault 1B
 Add 2 in all states to feature $X$ only. This shift in feature $X$ will infect features $Y$ and $Z$ through $\textbf{P}_2\boldsymbol\Lambda_2$ and $\textbf{P}_3\boldsymbol\Lambda_3$. 
@@ -325,12 +341,15 @@ Add 2 in all states to feature $X$ only. This shift in feature $X$ will infect f
 knitr::include_graphics("Fault1B_20170420.jpg")
 ```
 
+<!--
 ## Fault 1C
 Add 0.5 to features $X$ and $Z$ only in state $\mathcal{S}_3$. This fault is induced after state projections.
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault1C_20170420.jpg")
 ```
+-->
 
+<!--
 ## Drift Faults Defined
 
 - __Fault 2A__: $\textbf{X}^*(t_s) = \textbf{X}(t_s) + (s - 8500)\times 10^{-3}$, $s > 8500.$ This fault simulates a positive drift across all the process monitoring features. This drift is added *before* state projections.
@@ -338,18 +357,23 @@ knitr::include_graphics("Fault1C_20170420.jpg")
 - __Fault 2B__: $y^*(t_s) = y(t_s) + (s - 8500)\times 10^{-3}$ and $z^*(t_s) = z(t_s) + (s - 8500)\times 10^{-3}$, for $s > 8500.$ This fault simulates a positive drift in two of the process monitoring features. This drift is added *before* state projections.
 
 - __Fault 2C__: $y^*(t_s) = y(t_s) - 1.5 \times \frac{s - 8500}{10080 - 8500}$, for $s > 8500.$ This fault simulates a negative drift in one of the process monitoring features in $\mathcal{S}_2$ only. This drift is added *after* state projections.
+-->
 
+<!--
 ## Fault 2A
 Drift all features in all states by a maximum $+1.58$.
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault2A_20170420.jpg")
 ```
+-->
 
+<!--
 ## Fault 2B
 Drift features $Y$ and $Z$ in all states by a maximum $+1.58$. This drift in features $Y$ and $Z$ will infect feature $X$ through $\textbf{P}_2\boldsymbol\Lambda_2$ and $\textbf{P}_3\boldsymbol\Lambda_3$. 
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault2B_20170420.jpg")
 ```
+-->
 
 ## Fault 2C
 Drift feature $Y$ by a maximum $-1.5$ only in state $\mathcal{S}_2$. This fault is induced after state projections.
@@ -357,35 +381,41 @@ Drift feature $Y$ by a maximum $-1.5$ only in state $\mathcal{S}_2$. This fault 
 knitr::include_graphics("Fault2C_20170420.jpg")
 ```
 
+<!--
 ## Latent and Error Faults Defined
 - __Fault 3A__: $\textbf{X}^*(t_s) = \textbf{X}(t_s^*)$, where $t_s^* = \left[\frac{\delta(s - 8500)}{\omega - 8500} + 1\right]t_s$. For $s > 8500,$ this fault will amplify the underlying latent effect for all features. The maximum latent drift of this fault will be $\delta + 1$. For the single-state simlation, $\delta + 1 = 3$; for the multi-state simulation, $\delta + 1 = 6$. This mutation is added *before* state projections.
 
 - __Fault 3B__: $z^*(t_s) = z(t_s^*)$, where $t_s^* = \ln|t_s|$, $s \ge 8500.$ This fault will dampen the underlying latent effect for $x_3$ if $t_s > 1$ and amplify this effect if $t_s < 1$. This mutation is added *before* state projections.
 
 - __Fault 3C__: $y^*(t_s) = y(t_s) + 2 * \textbf{e}_2(s) - 0.25$, for $s > 8500.$ This fault simulates an error increase and negative shift, but only applied to one process monitoring feature in $\mathcal{S}_2$. This mutation is added *after* state projections.
-    
+-->
+
 ## Fault 3A
 Drift the latent variable $t$ by a maximum of $+6$ for all features in all states. 
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault3A_20170420.jpg")
 ```
 
+<!--
 ## Fault 3B
 Mutate $t$ by $\log t$ in all states for feature $Z$ only. This mutation through feature $Z$ will infect features $X$ and $Y$ through $\textbf{P}_2\boldsymbol\Lambda_2$ and $\textbf{P}_3\boldsymbol\Lambda_3$. 
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault3B_20170420.jpg")
 ```
+-->
 
+<!--
 ## Fault 3C
 Double and shift by $-0.25$ the machine-error vector on feature $Y$ in state $\mathcal{S}_2$ only. This fault is induced after state projections.
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault3C_20170420.jpg")
 ```
-
+-->
 
 
 # Simulation Study Results
 
+<!--
 ## Simulation Results
 We present an example of parsing the following tables:
 
@@ -396,7 +426,7 @@ We present an example of parsing the following tables:
 - When the $T^2$ statistic detected a fault, it did so after 122 minutes, on average.
 - When the $T^2$ statistic detected a fault, it did so within 490 minutes in 95% of cases.
 - The cell is not shaded green, so this statistic had less than median detection probability. The median detection probability was 100%.
-
+-->
 
 ## False Alarm Rates
 ```{r, fig.align = 'center', out.width='100%'}
@@ -440,8 +470,7 @@ knitr::include_graphics("Alarms_20170509.jpg")
 # Software Package for `R`
 
 ## Package `mvMonitoring`
-- No website: our package is currently in private beta-testing at the facility.    
-- So far, engineers have been pleased with what we've developed, and they are working with us closely to polish the package. 
+- No website: our package is currently in private beta-testing at the facility. 
 - `mspProcessData()` generates random draws from a serially autocorrelated and nonstationary multi-state (or single-state) multivariate process.
 - `mspTrain()` trains the projection matrix and non-parametric fault detection thresholds.
 - `mspMonitor()` assesses incoming process observations and classifies them as normal or abnormal.
@@ -454,15 +483,20 @@ knitr::include_graphics("Alarms_20170509.jpg")
 # Summary and References
 
 ## Summary
+### Overview
 - Explained the motivation for a multi-state modification to PCA.
 - Presented the MSAD-PCA dimension reduction procedure.
 - Described the simulation study used to validate the effectiveness of MSAD-PCA.
-- Discussed the simulation study results.
-- Demonstrated the utility of MSAD-PCA when applied to a real data set.
+- Discussed the simulation study and real data results.
 
-<!--
+### MSAD-PCA Findings
+- Helps detect faults faster and more consistently in multi-state processes
+- Doesn't suffer loss of power when applied to single-state processes
+- Moves another step toward fault attribution
+
+
 ## Future Work
---->
+
 
 <style>
   slides > slide { overflow: scroll; }
