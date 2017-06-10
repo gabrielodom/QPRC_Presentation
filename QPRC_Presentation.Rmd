@@ -308,9 +308,16 @@ For each statistic under AD- and MSAD-PCA, measure
 
 ## Fault Overview
 Induce one of the following faults at $s = 8,500$.
-```{r, fig.align = 'center', out.width='100%'}
-knitr::include_graphics("Fault_Desc_Table.JPG")
-```
+
+| Feature Affected         | Shift Fault | Drift Fault | Latent or Error Fault |
+|:-------------------------|:-----------:|:-----------:|:---------------------:|
+| All Features Equally     | Fault 1A    | Fault 2A    | Fault 3A              |
+| Feature(s)               | $(x, y, z)$ | $(x, y, z)$ | $(x, y, z)$           |
+| Each Feature Differently | Fault 1B    | Fault 2B    | Fault 3B              |
+| Feature(s)               | $(x)$       | $(y, z)$    | $(z)$                 |
+| Each State Differently   | Fault 1C    | Fault 2C    | Fault 3C              |
+| Feature(s) in State      | $(x, z)\in S_3$ | $y\in S_2$ | $y\in S_2$         |
+
 
 <!--
 ## Shift Faults Defined
