@@ -11,15 +11,8 @@ bibliography: qprc_bib_abbr.bib
 widescreen: yes
 ---
 
-<!--
-Put funding source:  National Science Foundation PFI:BIC Award No: 1632227
-
-Put your department:  Department of Statistical Science, and write out "Baylor University"  Most folks won't know what "BU" stands for.
--->
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-options(knitr.table.format = "html")
 ```
 
 ## Overview of Topics
@@ -278,8 +271,10 @@ $$
 $$
 $\textbf{P}_2$ and $\textbf{P}_3$ rotate the features so that the states are at right angles in at least one dimension. $\boldsymbol\Lambda_2$ and $\boldsymbol\Lambda_3$ inflate or deflate the feature variances along each principal component.
 
-## Example Projections Figure
-ADD FIGURE
+## Projections Visualized
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics("Scatterplot_Grid_annotated.jpg")
+```
 
 ## Monte Carlo Replication
 We set the threshold to $\alpha = 0.001$ and repeat the following 1000 times:
