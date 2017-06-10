@@ -17,8 +17,9 @@ Put funding source:  National Science Foundation PFI:BIC Award No: 1632227
 Put your department:  Department of Statistical Science, and write out "Baylor University"  Most folks won't know what "BU" stands for.
 -->
 
-  ```{r setup, include=FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+options(knitr.table.format = "html")
 ```
 
 ## Overview of Topics
@@ -432,6 +433,47 @@ We present an example of parsing the following tables:
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("False_Alarms_Table.JPG")
 ```
+
+## False Alarm Rates 2
+```{r, fig.align = 'center', out.width='90%'}
+knitr::include_graphics("false_alarms2.jpg")
+```
+
+
+<!--
+<img src="false_alarms2.jpg" width="881px" height="476px" />
+## False Alarm Rates kable
+```{r, results='asis'}
+library(readxl)
+false_alarms <- read_excel("~/GitHub/QPRC_Presentation/false_alarms.xlsx", 
+    col_names = FALSE)
+library(knitr)
+library(kableExtra)
+false_alarms2 <- false_alarms[-(1:3),]
+false_alarms2[2, 3] <- 2.3; false_alarms2[2, 6] <- 18.1
+false_alarms2[,1] <- c("False Alarms", "",
+                       "", "Shift Faults", "",
+                       "", "Drift Faults", "",
+                       "", "Latent/Error Faults", "")
+kable(false_alarms2, "html",
+      col.names = c("", "", "SPE", "T2", "SPE", "T2", "SPE", "T2", "SPE", "T2")) %>%
+  kable_styling(bootstrap_options = "striped")
+```
+ | |**Multi-State**| | | |**Single-State**| | | 
+:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:|:-----:
+ | |MSAD SPE|MSAD T^2|AD SPE|AD T^2|MSAD SPE|MSAD T^2|AD SPE|AD T^2
+False Alarms|%|0.15|0|0|1.25|0.1|11.5|0.12|14.5
+ |Per Day|2.3|0.1|0.1|18.1|1.6|165.7|1.9|208.9
+Shift Faults|1A|100.0|100.0|1.0|99.8|100.0|100.0|99.3|100.0
+ |1B|100.0|100.0|0.0|97.7|100.0|100.0|100.0|100.0
+ |1C|100.0|32.0|0.0|96.5|NA|NA|NA|NA
+Drift Faults|2A|100.0|100.0|0.0|97.7|25.8|100.0|20.3|100.0
+ |2B|100.0|100.0|0.0|7.7|100.0|100.0|100.0|100.0
+ |2C|100.0|100.0|0.0|97.0|NA|NA|NA|NA
+Latent or Error Faults|3A|100.0|16.2|3.0|30.6|92.9|98.5|93.0|98.8
+ |3B|100.0|99.7|98.3|99.0|100.0|100.0|100.0|100.0
+ |3C|100.0|14.0|0.0|97.0|NA|NA|NA|NA
+-->
 
 ## Detection Times
 ```{r, fig.align = 'center', out.width='100%'}
