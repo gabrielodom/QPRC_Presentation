@@ -429,12 +429,14 @@ We present an example of parsing the following tables:
 - The cell is not shaded green, so this statistic had less than median detection probability. The median detection probability was 100%.
 -->
 
+<!--
 ## False Alarm Rates
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("False_Alarms_Table.JPG")
 ```
+-->
 
-## False Alarm Rates 2
+## False Alarm Rates
 ```{r, fig.align = 'center', out.width='90%'}
 knitr::include_graphics("false_alarms2.jpg")
 ```
@@ -475,9 +477,16 @@ Latent or Error Faults|3A|100.0|16.2|3.0|30.6|92.9|98.5|93.0|98.8
  |3C|100.0|14.0|0.0|97.0|NA|NA|NA|NA
 -->
 
+<!--
 ## Detection Times
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Detection_Times_Table.JPG")
+```
+-->
+
+## Detection Times
+```{r, fig.align = 'center', out.width='90%'}
+knitr::include_graphics("detection_times2.JPG")
 ```
 
 ## Comparison
