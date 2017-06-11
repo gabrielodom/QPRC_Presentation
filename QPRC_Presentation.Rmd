@@ -340,7 +340,7 @@ knitr::include_graphics("Fault1A_20170420.jpg")
 -->
 
 ## Fault 1B
-Add 2 in all states to feature $X$ only. This shift in feature $X$ will infect features $Y$ and $Z$ through $\textbf{P}_2\boldsymbol\Lambda_2$ and $\textbf{P}_3\boldsymbol\Lambda_3$. 
+$x^*(t_s) = x^*(t_s) + 2,\ s \ge 8500.$ This shift in feature $X$ will infect features $Y$ and $Z$ through $\textbf{P}_2\boldsymbol\Lambda_2$ and $\textbf{P}_3\boldsymbol\Lambda_3$. 
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault1B_20170420.jpg")
 ```
@@ -380,7 +380,7 @@ knitr::include_graphics("Fault2B_20170420.jpg")
 -->
 
 ## Fault 2C
-Drift feature $Y$ by a maximum $-1.5$ only in state $\mathcal{S}_2$. This fault is induced after state projections.
+$y^*(t_s) = y(t_s) - 1.5 \times \frac{s - 8500}{10080 - 8500}$, for $s > 8500.$ This fault is induced after state projections.
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault2C_20170420.jpg")
 ```
@@ -395,7 +395,7 @@ knitr::include_graphics("Fault2C_20170420.jpg")
 -->
 
 ## Fault 3A
-Drift the latent variable $t$ by a maximum of $+6$ for all features in all states. 
+$\textbf{X}^*(t_s) = \textbf{X}(t_s^*)$, where $t_s^* = \left[\frac{5(s - 8500)}{\omega - 8500} + 1\right]t_s$ for $s > 8500.$
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault3A_20170420.jpg")
 ```
@@ -533,7 +533,9 @@ knitr::include_graphics("Alarms_20170509.jpg")
 
 
 ## Future Work
-
+- Volatility modelling
+- Fault attribution
+- Multivariate Functional MSAD-PCA
 
 <style>
   slides > slide { overflow: scroll; }
