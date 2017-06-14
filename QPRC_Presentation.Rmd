@@ -16,6 +16,22 @@ widescreen: yes
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+## Ackowledgements
+- Kathryn B. Newhart | Department of Civil and Environmental Engineering | Colorado School of Mines
+- Tzahi Y. Cath | Department of Civil and Environmental Engineering | Colorado School of Mines
+- Amanda S. Hering | Department of Statistical Science | Baylor University
+
+```{r, fig.align = 'center', out.width='40%',out.extra='style="float:center"'}
+knitr::include_graphics("renuwit.jpg")
+```
+```{r, fig.align = 'center', out.width='20%',out.extra='style="float:center"'}
+# jpegs <- c("nsf1.jpg", "nsf1.jpg", "nsf1.jpg")
+knitr::include_graphics("nsf1.jpg")
+```
+```{r, fig.align = 'center', out.width='21%',out.extra='style="float:center"'}
+knitr::include_graphics("csm.jpg")
+```
+
 ## Overview of Topics
 
 - Introduction & Motivating Example
@@ -116,7 +132,7 @@ As of a few months ago, all process features are now recorded on the same 1-minu
 \[
 \left[\sum\limits_{i = 1}^d \lambda_i\right] / \text{tr}\left(\boldsymbol\Lambda\right).
 \]
-- $\textbf{Y}_s := \textbf{X}_s\textbf{P}_d \in\mathbb{R}_{1\times d}$ is the reduced-dimension representation of observation $\textbf{X}_s$.
+- $\textbf{Y}_s := \textbf{X}_s\textbf{P}_d$ is the reduced-dimension representation of observation $\textbf{X}_s$.
 
 ## Competing Methods
 PCA is non-optimal because of the autocorrelation and non-linearity / non-stationarity of the data. Some alternatives are:
@@ -204,11 +220,11 @@ Then the full non-linear, autocorrelated, non-stationary simulated process at in
 We follow @kazor_comparison_2016 and continue updating the original design of @dong_batch_1996. Thus
 
 - the errors of $t$, $\epsilon_t$,  be drawn from a first-order autoregressive process over $s$, where $\varepsilon \sim N(0, \sigma_{\varepsilon})$,
+- The autocorrelation parameter $\varphi = 0.75$
 - The process dimension $p = 3$,
 - The cycle length is $\omega = 7 * 24 * 60 = 10,080$, corresponding to one observation each minute over one week,
-- The observation index $s = 1, \ldots, \omega$,
-- The observation at index $s$ is given by $\textbf{X}_s := \left\langle x_1 = X_1(t_s), x_2 = X_2(t_s), \ldots, x_p = X_p(t_s) \right\rangle$, and
-- The autocorrelation parameter $\varphi = 0.75$.
+- The observation index $s = 1, \ldots, \omega$, and
+- The observation at index $s$ is given by $\textbf{X}_s := \left\langle x_1 = X_1(t_s), x_2 = X_2(t_s), \ldots, x_p = X_p(t_s) \right\rangle$.
 
 ## Errors and Latent Feature Construction
 1. Draw the first innovation from
@@ -280,9 +296,7 @@ knitr::include_graphics("Scatterplot_Grid_annotated.jpg")
 ## Monte Carlo Replication
 We set the threshold to $\alpha = 0.001$ and repeat the following 1000 times:
 
-1. Draw a random set of observations:
-    + one set of NOC under the single-state model,
-    + one set of NOC under the multi-state model.
+1. Draw a random set of observations: one set of NOC under the single-state model ($\mathcal{S}_1$ only) and one under the multi-state model.
 1. Apply each of the six single-state and nine multi-state faults (discussed in the next section) to both NOC data sets. There will be 17 total versions of the data set.
 1. Train the fault detection system with 75% of the observations:
     + 7,560 observations for the single-state model,
@@ -380,7 +394,7 @@ knitr::include_graphics("Fault2B_20170420.jpg")
 -->
 
 ## Fault 2C
-$y^*(t_s) = y(t_s) - 1.5 \times \frac{s - 8500}{10080 - 8500}$, for $s > 8500.$ This fault is induced after state projections.
+$y^*(t_s) = y(t_s) - 1.5 \times \frac{s - 8500}{10080 - 8500}$, for $s > 8500$ and $y\in\mathcal{S}_2.$ This fault is induced after state projections.
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Fault2C_20170420.jpg")
 ```
@@ -439,7 +453,7 @@ knitr::include_graphics("False_Alarms_Table.JPG")
 ```
 -->
 
-## False Alarm Rates
+## False Alarm Rates and Detection Proportions
 ```{r, fig.align = 'center', out.width='90%'}
 knitr::include_graphics("false_alarms2.jpg")
 ```
@@ -512,6 +526,7 @@ knitr::include_graphics("Alarms_20170509.jpg")
 - `mspTrain()` trains the projection matrix and non-parametric fault detection thresholds.
 - `mspMonitor()` assesses incoming process observations and classifies them as normal or abnormal.
 - `mspWarning()` keeps a running tally of abnormal observations and raises an alarm if necessary.
+- Supports piping: `mspProcessData() %>% mspTrain %>% mspMonitor %>% mspWarning`
 - Alarms can be sent via email or SMS from the remote facility to the operators.
 
 
@@ -533,9 +548,31 @@ knitr::include_graphics("Alarms_20170509.jpg")
 
 
 ## Future Work
+<br />
+<h3 style="text-align: center;" markdown="1">
+<font size="22">
+<!-- It doesn't matter what size, you put - it's all the same -->
+**Fault Detection**
+</font>
+</h3>
+<br />
+<h3 style="text-align: center;" markdown="1">
+<font size="22">
+**Fault Attribution**
+</font>
+</h3>
+<br />
+<h3 style="text-align: center;" markdown="1">
+<font size="22">
+**Process Automation**
+</font>
+</h3>
+
+<!--
 - Volatility modelling
 - Fault attribution
 - Multivariate Functional MSAD-PCA
+-->
 
 <style>
   slides > slide { overflow: scroll; }
