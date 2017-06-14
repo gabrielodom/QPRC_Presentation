@@ -521,7 +521,7 @@ knitr::include_graphics("Alarms_20170509.jpg")
 # Software Package for `R`
 
 ## Package `mvMonitoring`
-- No website: our package is currently in private beta-testing at the facility. 
+- Private repository on GitHub: currently in beta-testing at the facility. 
 - `mspProcessData()` generates random draws from a serially autocorrelated and nonstationary multi-state (or single-state) multivariate process.
 - `mspTrain()` trains the projection matrix and non-parametric fault detection thresholds.
 - `mspMonitor()` assesses incoming process observations and classifies them as normal or abnormal.
