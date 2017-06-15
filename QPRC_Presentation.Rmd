@@ -3,7 +3,7 @@ title: "Multi-State Multivariate Statistical Process Monitoring"
 author: Gabriel J. Odom | Department of Statistical Science | Baylor University <br /> National Science Foundation PFI:BIC Award No. 1632227 
 header-includes: \usepackage[linesnumbered, ruled]{algorithm2e}
 output:
-  ioslides_presentation: null
+  ioslides_presentation:
 beamer_presentation: default
 logo: baylor_logo.png
 subtitle: An Application to the Mines Park Water Treatment Facility
@@ -54,28 +54,30 @@ This is the html tag for a comment.
 ## Introduction
 - Many factories or other closed production systems use real-time online process monitoring.
 - We aim to detect potential problems within the system before they cause damage or cause the process to shut down.
+- Specifically, we monitor a very complex Wastewater Treatment process.
 - Data description:
     + non-Gaussian process
     + multiple correlated variables
     + temporal dependence of observations
-    + non-stationary due to operator input an ambient conditions
+    + non-stationary due to operator input and ambient conditions
 
 ## Process Dimensionality
 - In multivariate contexts, the number of parameters to estimate increases quadratically with dimension.
 - That is, we must estimate $p + \frac{p}{2}(p + 1) \in \mathbb{O}(p^2)$ first- and second-moment parameters if we have $p$ features.
 - Linear dimension reduction (LDR) allows us to simplify complex data structures to more simple data structures via linear combinations of features.
 - LDR is built around eigen-decomposition / principal component analysis (PCA) or the singular value decomposition (SVD).
+- PCA ensures transformed feature orthogonality and reduces noise.
 
 ## Facility and Process Details
 - This work is motivated by our partnership with the Colorado School of Mines on the ReNUWit water preservation grant.
 - Our team manages a decentralised wastewater treatment (WWT) plant in Golden, CO.
-- We measure 40 features and their lagged values (80 total features).
+- We measure 28 features.
 - The continuous features are aggregated to the minute-level.
 - We aim to quickly and accurately detect process malfunctions before human operators by incorporating known system state behavior.
-- Stock PCA applied to WWT by @wise_principal_1988 and chemical process monitoring by @kresta_multivariate_1991
+- PCA applied to WWT by @wise_principal_1988 and chemical process monitoring by @kresta_multivariate_1991
 - @baggiani_real-time_2009 used adaptive PCA, @sanchez-fernandez_fault_2015 used distributive PCA, and @kazor_comparison_2016 used adaptive-dynamic PCA to monitor WWT processes.
 
-## The Bioreactor System
+## The Wastewater Treatment System
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("Kate_SBMBR_Design.JPG")
 ```
@@ -152,7 +154,7 @@ We combine Adaptive, Dynamic, and Multi-State modifications to PCA.
 \[
 \textbf{X}_{w} := [\textbf{X}_{s - w + 1}\ \vdots\ \textbf{X}_{s - w + 2}\ \vdots\ \cdots\ \vdots\ \textbf{X}_{s - 1}\ \vdots\ \textbf{X}_s]^T.
 \]
-- Calculate the scatter matrix with $\textbf{X}_{w}$ instead of the full data matrix $\textbf{X}$.
+- Calculate PCA with $\textbf{X}_{w}$ instead of the full data matrix $\textbf{X}$.
 - Estimate $\textbf{P}_d$.
 - After performing necessary monitoring statistics on the new observations, ''learn'' the newest $n_u$ observations, ''forget'' the oldest $n_u$ observations, and estimate the new scatter matrix.
 
@@ -203,7 +205,7 @@ These statistics are estimated non-parametrically, as discussed by @kazor_compar
 
 
 
-# Simulation of NOC Observations
+# Simulation of IC Observations
 
 <!--
 ## Notation
@@ -224,7 +226,7 @@ We follow @kazor_comparison_2016 and continue updating the original design of @d
 - The process dimension $p = 3$,
 - The cycle length is $\omega = 7 * 24 * 60 = 10,080$, corresponding to one observation each minute over one week,
 - The observation index $s = 1, \ldots, \omega$, and
-- The observation at index $s$ is given by $\textbf{X}_s := \left\langle x_1 = X_1(t_s), x_2 = X_2(t_s), \ldots, x_p = X_p(t_s) \right\rangle$.
+- The observation at index $s$ is given by $\textbf{X}_s := \left\langle x(t_s),\ y(t_s),\ z(t_s) \right\rangle$.
 
 ## Errors and Latent Feature Construction
 1. Draw the first innovation from
@@ -293,22 +295,22 @@ $\textbf{P}_2$ and $\textbf{P}_3$ rotate the features so that the states are at 
 knitr::include_graphics("Scatterplot_Grid_annotated.jpg")
 ```
 
-## Monte Carlo Replication
+## Simulation Steps
 We set the threshold to $\alpha = 0.001$ and repeat the following 1000 times:
 
-1. Draw a random set of observations: one set of NOC under the single-state model ($\mathcal{S}_1$ only) and one under the multi-state model.
-1. Apply each of the six single-state and nine multi-state faults (discussed in the next section) to both NOC data sets. There will be 17 total versions of the data set.
+1. Draw a random set of observations: one set of IC under the single-state model ($\mathcal{S}_1$ only) and one under the multi-state model.
+1. Apply each of the six single-state and nine multi-state faults (discussed in the next section) to both IC data sets. There will be 17 total versions of the data set.
 1. Train the fault detection system with 75% of the observations:
     + 7,560 observations for the single-state model,
     + 2,520 observations per state for the multi-state model.
 1. Calculate AD- and MSAD-PCA projections for all 17 data sets.
 
 ## Performance Metrics
-An observation is flagged as suspicious if the monitoring statistic is beyond the calculated non-parametric threshold. An observation will trigger an alarm if it is the $k^{th}$ observation in a row to be flagged. For this simulation study, we triggered an alarm at the third consecutive flag.
+Three sequential observations out of control trigger an alarm.
 
 For each statistic under AD- and MSAD-PCA, measure
 
-- The **false alarm rate** from the NOC data sets. This is the number of false alarms recorded in the process observations without faults.
+- The **false alarm rate** from the IC data sets. This is the number of false alarms recorded in the process observations without faults.
 - The **fault detection indicator** for each of the 15 fault data sets.
 - The **time to detection**; the earliest a statistic can trigger an alarm is after 3 minutes.
 
@@ -319,15 +321,34 @@ For each statistic under AD- and MSAD-PCA, measure
 ## Fault Overview
 Induce one of the following faults at $s = 8,500$.
 
+<!-- Removing the first column bolds the Shift column. Boo
+| | Shift Fault | Drift Fault | Latent or Error Fault |
+|-|:-----------:|:-----------:|:---------------------:|
+| | Fault 1A    | Fault 2A    | Fault 3A              |
+| | $(x, y, z)$ | $(x, y, z)$ | $(x, y, z)$           |
+| | Fault 1B    | Fault 2B    | Fault 3B              |
+| | $(x)$       | $(y, z)$    | $(z)$                 |
+| | Fault 1C    | Fault 2C    | Fault 3C              |
+| | $(x, z)\in S_3$ | $y\in S_2$ | $y\in S_2$         |
+-->
+
 | Feature Affected         | Shift Fault | Drift Fault | Latent or Error Fault |
 |:-------------------------|:-----------:|:-----------:|:---------------------:|
 | All Features Equally     | Fault 1A    | Fault 2A    | Fault 3A              |
-| Feature(s)               | $(x, y, z)$ | $(x, y, z)$ | $(x, y, z)$           |
-| Each Feature Differently | Fault 1B    | Fault 2B    | Fault 3B              |
-| Feature(s)               | $(x)$       | $(y, z)$    | $(z)$                 |
-| Each State Differently   | Fault 1C    | Fault 2C    | Fault 3C              |
-| Feature(s) in State      | $(x, z)\in S_3$ | $y\in S_2$ | $y\in S_2$         |
+|                          | $(x, y, z)$ | $(x, y, z)$ | $(x, y, z)$           |
+| Different Features       | Fault 1B    | Fault 2B    | Fault 3B              |
+|                          | $(x)$       | $(y, z)$    | $(z)$                 |
+| Different States         | Fault 1C    | Fault 2C    | Fault 3C              |
+|                          | $(x, z)\in S_3$ | $y\in S_2$ | $y\in S_2$         |
 
+<!--
+--------------------   ------------------   --------------   --------------
+Different Features       Fault 1B             Fault 2B         Fault 3B
+                         $(x)$                $(y, z)$         $(z)$
+Different States         Fault 1C             Fault 2C         Fault 3C
+                         $(x, z)\in S_3$      $y\in S_2$       $y\in S_2$
+--------------------   ------------------   --------------   --------------
+-->
 
 <!--
 ## Shift Faults Defined
@@ -339,11 +360,14 @@ Induce one of the following faults at $s = 8,500$.
 - __Fault 1C__: $x^*(t_s) = x^*(t_s) + 0.5,\ z^*(t_s) = z^*(t_s) + 0.5,\ s \ge 8500.$ This fault simulates a shift in two of the process monitoring features in $\mathcal{S}_3$ only. This shift is added *after* state projections.
 -->
 
-## Normal Process
-A single draw from the multivariate process under NOC. The vertical black line (21:40 on 2 December) marks time at which the fault would be induced.
+<!--
+## IC Process
+A single draw from the multivariate process under IC. The vertical black line (21:40 on 2 December) marks time at which the fault would be induced.
 ```{r, fig.align = 'center', out.width='100%'}
 knitr::include_graphics("NOC_20170420.jpg")
 ```
+-->
+
 
 <!--
 ## Fault 1A
@@ -353,9 +377,11 @@ knitr::include_graphics("Fault1A_20170420.jpg")
 ```
 -->
 
-## Fault 1B
-$x^*(t_s) = x^*(t_s) + 2,\ s \ge 8500.$ This shift in feature $X$ will infect features $Y$ and $Z$ through $\textbf{P}_2\boldsymbol\Lambda_2$ and $\textbf{P}_3\boldsymbol\Lambda_3$. 
-```{r, fig.align = 'center', out.width='100%'}
+## Fault 1B: Shift feature $x$
+```{r, fig.align = 'center', out.width="64%"}
+knitr::include_graphics("NOC_20170420.jpg")
+```
+```{r, fig.align = 'center', out.width="64%"}
 knitr::include_graphics("Fault1B_20170420.jpg")
 ```
 
@@ -393,9 +419,11 @@ knitr::include_graphics("Fault2B_20170420.jpg")
 ```
 -->
 
-## Fault 2C
-$y^*(t_s) = y(t_s) - 1.5 \times \frac{s - 8500}{10080 - 8500}$, for $s > 8500$ and $y\in\mathcal{S}_2.$ This fault is induced after state projections.
-```{r, fig.align = 'center', out.width='100%'}
+## Fault 2C: Drift Feature $y$ in $\mathcal{S}_2$
+```{r, fig.align = 'center', out.width="64%"}
+knitr::include_graphics("NOC_20170420.jpg")
+```
+```{r, fig.align = 'center', out.width="64%"}
 knitr::include_graphics("Fault2C_20170420.jpg")
 ```
 
@@ -408,9 +436,11 @@ knitr::include_graphics("Fault2C_20170420.jpg")
 - __Fault 3C__: $y^*(t_s) = y(t_s) + 2 * \textbf{e}_2(s) - 0.25$, for $s > 8500.$ This fault simulates an error increase and negative shift, but only applied to one process monitoring feature in $\mathcal{S}_2$. This mutation is added *after* state projections.
 -->
 
-## Fault 3A
-$\textbf{X}^*(t_s) = \textbf{X}(t_s^*)$, where $t_s^* = \left[\frac{5(s - 8500)}{\omega - 8500} + 1\right]t_s$ for $s > 8500.$
-```{r, fig.align = 'center', out.width='100%'}
+## Fault 3A: Latent Drift
+```{r, fig.align = 'center', out.width="64%"}
+knitr::include_graphics("NOC_20170420.jpg")
+```
+```{r, fig.align = 'center', out.width="64%"}
 knitr::include_graphics("Fault3A_20170420.jpg")
 ```
 
@@ -484,9 +514,14 @@ knitr::include_graphics("Detection_Times_Table.JPG")
 ```
 -->
 
-## Detection Times
+## Detection Times: Multi-State
 ```{r, fig.align = 'center', out.width='90%'}
-knitr::include_graphics("detection_times2.JPG")
+knitr::include_graphics("detection_times_MS.png")
+```
+
+## Detection Times: Single-State
+```{r, fig.align = 'center', out.width='90%'}
+knitr::include_graphics("detection_times_SS.png")
 ```
 
 ## Comparison
@@ -504,6 +539,9 @@ Under the Single-State model, the pairs of AD-PCA and MSAD-PCA process monitorin
 # Case Study Results
 
 ## False Alarm Rates
+
+At the Mines Park WWT facility, a pH fault caused serious damage to the biological cleaning agents. We would like to find out if our method would have detected this problem faster.
+
 We increased the flags to trigger an alarm from 3 to 5 for the real case due to strong serial autocorrelation. Note that these false alarm rates are all greater than or equal to the set threshold level of $\alpha = 0.1\%$.
 
                    MSAD $T^2$   MSAD *SPE*   AD $T^2$   AD *SPE*
@@ -548,20 +586,23 @@ knitr::include_graphics("Alarms_20170509.jpg")
 
 
 ## Future Work
-<br />
 <h3 style="text-align: center;" markdown="1">
 <font size="22">
 <!-- It doesn't matter what size, you put - it's all the same -->
 **Fault Detection**
 </font>
 </h3>
-<br />
+```{r, fig.align = 'center', out.width='8%'}
+knitr::include_graphics("down_arrow.jpg")
+```
 <h3 style="text-align: center;" markdown="1">
 <font size="22">
 **Fault Attribution**
 </font>
 </h3>
-<br />
+```{r, fig.align = 'center', out.width='8%'}
+knitr::include_graphics("down_arrow.jpg")
+```
 <h3 style="text-align: center;" markdown="1">
 <font size="22">
 **Process Automation**
