@@ -312,7 +312,7 @@ For each statistic under AD- and MSAD-PCA, measure
 
 - The **false alarm rate** from the IC data sets. This is the number of false alarms recorded in the process observations without faults.
 - The **fault detection indicator** for each of the 15 fault data sets.
-- The **time to detection**; the earliest a statistic can trigger an alarm is after 3 minutes.
+- The **time to detection**: the earliest a statistic can trigger an alarm is after 3 minutes.
 
 
 
